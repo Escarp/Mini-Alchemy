@@ -1,53 +1,167 @@
 package control;
 
+import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.TextColor;
+import com.googlecode.lanterna.graphics.SimpleTheme;
+import com.googlecode.lanterna.graphics.Theme;
+import com.googlecode.lanterna.gui2.*;
+import com.googlecode.lanterna.gui2.dialogs.MessageDialog;
+import com.googlecode.lanterna.gui2.dialogs.MessageDialogButton;
+import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
-import com.googlecode.lanterna.terminal.Terminal;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.TimeZone;
 
 public class Main {
-
 	public static void main(String[] args) {
-		DefaultTerminalFactory defaultTerminalFactory = 
-				new DefaultTerminalFactory() ;
-		Terminal terminal = null ;
-		try{
-			terminal = defaultTerminalFactory.createTerminal() ;
+		DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory() ;
+		Screen screen = null;
+		try {
+			screen = terminalFactory.createScreen() ;
+			screen.startScreen() ;
+			
+			final WindowBasedTextGUI textGUI = 
+					new MultiWindowTextGUI( screen ) ;
+			
+			final Window window = new BasicWindow( "Window" ) ;
+			Theme theme = SimpleTheme.makeTheme( 
+					true 
+					, TextColor.ANSI.WHITE 
+					, TextColor.ANSI.BLACK 
+					, TextColor.ANSI.WHITE 
+					, TextColor.ANSI.BLACK 
+					, TextColor.ANSI.BLACK 
+					, TextColor.ANSI.WHITE 
+					, TextColor.ANSI.RED ) ;
+			window.setTheme( theme ) ;
+			
+			Panel contentPanel = new Panel( new GridLayout( 2 ) ) ;
+			
+			GridLayout gridLayout = 
+					( GridLayout )contentPanel.getLayoutManager() ;
+			gridLayout.setHorizontalSpacing( 3 ) ;
+
+			Label title = 
+					new Label( "This is a label that spans two columns" ) ;
+			title.setLayoutData( GridLayout.createLayoutData(
+					GridLayout.Alignment.BEGINNING ,	// Horizontal alignment 
+														// in the grid cell if 
+														// the cell is larger 
+														// than the component's 
+														// preferred size
 					
-			terminal.setBackgroundColor(TextColor.ANSI.BLUE);
-		    terminal.setForegroundColor(TextColor.ANSI.YELLOW);
-		    
-		    terminal.putCharacter( 'H' ) ;
-		    terminal.putCharacter( 'e' ) ;
-		    terminal.putCharacter( 'l' ) ;
-		    terminal.putCharacter( 'l' ) ;
-		    terminal.putCharacter( 'o' ) ;
-		    terminal.putCharacter( ' ' ) ;
-		    terminal.putCharacter( 'W' ) ;
-		    terminal.putCharacter( 'o' ) ;
-		    terminal.putCharacter( 'r' ) ;
-		    terminal.putCharacter( 'l' ) ;
-		    terminal.putCharacter( 'd' ) ;
-		    terminal.putCharacter( '!' ) ;
-		    terminal.putCharacter( '\n' ) ;
-		    
-		    terminal.flush() ;
-		    
-		    Thread.sleep( 2000 ) ;
-		    
+					GridLayout.Alignment.BEGINNING ,	// Vertical alignment in 
+														// the grid cell if the 
+														// cell is larger than 
+														// the component's 
+														// preferred size
+					
+					false ,								// Give the component 
+														// extra horizontal 
+														// space if available
+					
+					false ,								// Give the component 
+														// extra vertical space 
+														// if available
+					
+					2 ,									// Horizontal span
+					
+					1 ) ) ;								// Vertical span
+
+			contentPanel.addComponent( title ) ;
+
+			contentPanel.addComponent( new Label( "Text Box ( aligned )" ) ) ;
+			contentPanel.addComponent(
+					new TextBox()
+					.setLayoutData( GridLayout.createLayoutData( 
+							GridLayout.Alignment.BEGINNING 
+							, GridLayout.Alignment.CENTER ) ) ) ;
+
+			contentPanel.addComponent( 
+					new Label( "Password Box ( right aligned )" ) ) ;
+			contentPanel.addComponent(
+					new TextBox()
+					.setMask( '*' )
+					.setLayoutData( GridLayout.createLayoutData( 
+							GridLayout.Alignment.END 
+							, GridLayout.Alignment.CENTER ) ) ) ;
+
+			contentPanel.addComponent( 
+					new Label( "Read-only Combo Box ( forced size )" ) ) ;
+			List<String> timezonesAsStrings = new ArrayList<String>() ;
+			for( String id : TimeZone.getAvailableIDs() ) {
+				timezonesAsStrings.add( id ) ;
+			}
+			ComboBox<String> readOnlyComboBox = 
+					new ComboBox<String>( timezonesAsStrings ) ;
+			readOnlyComboBox.setReadOnly( true ) ;
+			readOnlyComboBox.setPreferredSize( new TerminalSize( 20 , 1 ) ) ;
+			contentPanel.addComponent( readOnlyComboBox ) ;
+
+			contentPanel.addComponent( 
+					new Label( "Editable Combo Box ( filled )" ) ) ;
+			contentPanel.addComponent(
+					new ComboBox<String>( 
+							"Item #1" 
+							, "Item #2" 
+							, "Item #3" 
+							, "Item #4" )
+					.setReadOnly( false )
+					.setLayoutData( 
+						GridLayout.createHorizontallyFilledLayoutData( 1 ) ) ) ;
+
+			contentPanel.addComponent( new Label( "Button ( centered )" ) ) ;
+			contentPanel.addComponent( new Button( "Button" , new Runnable() {
+				@Override
+				public void run() {
+					MessageDialog.showMessageDialog( 
+							textGUI , 
+							"MessageBox" , 
+							"This is a message box" , 
+							MessageDialogButton.OK ) ;
+				}
+			} ).setLayoutData( 
+					GridLayout.createLayoutData( 
+							GridLayout.Alignment.CENTER 
+							, GridLayout.Alignment.CENTER ) ) ) ;
+
+			/*contentPanel.addComponent(
+                    new EmptySpace()
+                            .setLayoutData(
+                        GridLayout.createHorizontallyFilledLayoutData( 2 ) ) ) ;
+            contentPanel.addComponent(
+                    new Separator( Direction.HORIZONTAL )
+                            .setLayoutData(
+                   GridLayout.createHorizontallyFilledLayoutData( 2 ) ) ) ;*/
+			contentPanel.addComponent(
+					new Button( "Close" , new Runnable() {
+						@Override
+						public void run() {
+							window.close() ;
+						}
+					} 
+							).setLayoutData(
+					GridLayout.createHorizontallyEndAlignedLayoutData( 2 ) ) ) ;
+
+			window.setComponent( contentPanel ) ;
+			
+			textGUI.addWindowAndWait( window ) ;
+
 		}
-		catch( Exception e ){
+		catch ( Exception e ) {
 			e.printStackTrace() ;
 		}
 		finally {
-		    if( terminal != null ) {
-		        try {
-		        	terminal.close() ;
-		        }
-		        catch( Exception e ){
-		        	e.printStackTrace() ;
-		        }
-		    }
+			if( screen != null ) {
+				try {
+					screen.stopScreen() ;
+				}
+				catch( IOException e ) {
+					e.printStackTrace() ;
+				}
+			}
 		}
 	}
-
 }
