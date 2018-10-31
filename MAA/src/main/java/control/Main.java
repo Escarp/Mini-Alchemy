@@ -9,29 +9,39 @@ import com.googlecode.lanterna.gui2.dialogs.MessageDialog;
 import com.googlecode.lanterna.gui2.dialogs.MessageDialogButton;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
+import com.googlecode.lanterna.terminal.swing.TerminalEmulatorColorConfiguration;
+import com.googlecode.lanterna.terminal.swing.TerminalEmulatorPalette;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
 
 public class Main {
-	public static void main(String[] args) {
+	public static void main( String[] args ) {
 		DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory() ;
 		Screen screen = null;
 		try {
+			terminalFactory.setTerminalEmulatorTitle( "Testing names" ) ;
+			terminalFactory.setTerminalEmulatorColorConfiguration( 
+					TerminalEmulatorColorConfiguration.newInstance( 
+							TerminalEmulatorPalette.GNOME_TERMINAL
+					) 
+			) ;
+			
 			screen = terminalFactory.createScreen() ;
 			screen.startScreen() ;
 			
 			final WindowBasedTextGUI textGUI = 
 					new MultiWindowTextGUI( screen ) ;
 			
-			final Window window = new BasicWindow( "Window" ) ;
+			final Window window = new BasicWindow( " Window " ) ;
 			Theme theme = SimpleTheme.makeTheme( 
 					true 
 					, TextColor.ANSI.WHITE 
 					, TextColor.ANSI.BLACK 
 					, TextColor.ANSI.WHITE 
-					, TextColor.ANSI.BLACK 
+					, TextColor.ANSI.DEFAULT 
 					, TextColor.ANSI.BLACK 
 					, TextColor.ANSI.WHITE 
 					, TextColor.ANSI.RED ) ;
