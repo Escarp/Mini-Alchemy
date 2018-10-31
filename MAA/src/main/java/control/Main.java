@@ -20,7 +20,7 @@ import java.util.TimeZone;
 public class Main {
 	public static void main( String[] args ) {
 		DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory() ;
-		Screen screen = null;
+		Screen screen = null; 
 		try {
 			terminalFactory.setTerminalEmulatorTitle( "Testing names" ) ;
 			terminalFactory.setTerminalEmulatorColorConfiguration( 
