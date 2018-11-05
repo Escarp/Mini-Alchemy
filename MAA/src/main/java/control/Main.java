@@ -14,6 +14,7 @@ import com.googlecode.lanterna.terminal.swing.TerminalEmulatorPalette;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -22,6 +23,7 @@ public class Main {
 		DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory() ;
 		Screen screen = null; 
 		try {
+			
 			terminalFactory.setTerminalEmulatorTitle( "Testing names" ) ;
 			terminalFactory.setTerminalEmulatorColorConfiguration( 
 					TerminalEmulatorColorConfiguration.newInstance( 
@@ -31,6 +33,32 @@ public class Main {
 			
 			screen = terminalFactory.createScreen() ;
 			screen.startScreen() ;
+			
+			TerminalSize size = new TerminalSize( 14 , 10 ) ;
+			ActionListBox actionListBox = new ActionListBox( size ) ;
+			
+			actionListBox.addItem( "Test 1" , new Runnable() {
+				@Override
+				public void run() {
+					System.out.println( "Test1" );
+				}
+			});
+			
+			actionListBox.addItem( "Test 2" , new Runnable() {
+				@Override
+				public void run() {
+					System.out.println( "Test2" );
+				}
+			});
+			
+			actionListBox.addItem( "Test 3" , new Runnable() {
+				@Override
+				public void run() {
+					System.out.println( "Test3" );
+				}
+			});
+			
+			actionListBox.setLayoutData( BorderLayout.Location.CENTER ) ;
 			
 			final WindowBasedTextGUI textGUI = 
 					new MultiWindowTextGUI( screen ) ;
@@ -46,114 +74,119 @@ public class Main {
 					, TextColor.ANSI.WHITE 
 					, TextColor.ANSI.RED ) ;
 			window.setTheme( theme ) ;
+			window.setHints( Arrays.asList( 
+					Window.Hint.FULL_SCREEN
+					, Window.Hint.NO_DECORATIONS ) ) ;
 			
-			Panel contentPanel = new Panel( new GridLayout( 2 ) ) ;
+			Panel contentPanel = new Panel( new BorderLayout() ) ;
 			
-			GridLayout gridLayout = 
-					( GridLayout )contentPanel.getLayoutManager() ;
-			gridLayout.setHorizontalSpacing( 3 ) ;
-
+//			GridLayout gridLayout = 
+//					( GridLayout )contentPanel.getLayoutManager() ;
+//			gridLayout.setHorizontalSpacing( 3 ) ;
+			
+			contentPanel.addComponent( actionListBox ) ;
+			
 			Label title = 
 					new Label( "This is a label that spans two columns" ) ;
-			title.setLayoutData( GridLayout.createLayoutData(
-					GridLayout.Alignment.BEGINNING ,	// Horizontal alignment 
-														// in the grid cell if 
-														// the cell is larger 
-														// than the component's 
-														// preferred size
-					
-					GridLayout.Alignment.BEGINNING ,	// Vertical alignment in 
-														// the grid cell if the 
-														// cell is larger than 
-														// the component's 
-														// preferred size
-					
-					false ,								// Give the component 
-														// extra horizontal 
-														// space if available
-					
-					false ,								// Give the component 
-														// extra vertical space 
-														// if available
-					
-					2 ,									// Horizontal span
-					
-					1 ) ) ;								// Vertical span
-
+//			title.setLayoutData( GridLayout.createLayoutData(
+//					GridLayout.Alignment.BEGINNING ,	// Horizontal alignment 
+//														// in the grid cell if 
+//														// the cell is larger 
+//														// than the component's 
+//														// preferred size
+//					
+//					GridLayout.Alignment.BEGINNING ,	// Vertical alignment in 
+//														// the grid cell if the 
+//														// cell is larger than 
+//														// the component's 
+//														// preferred size
+//					
+//					false ,								// Give the component 
+//														// extra horizontal 
+//														// space if available
+//					
+//					false ,								// Give the component 
+//														// extra vertical space 
+//														// if available
+//					
+//					2 ,									// Horizontal span
+//					
+//					1 ) ) ;								// Vertical span
+//
 			contentPanel.addComponent( title ) ;
-
-			contentPanel.addComponent( new Label( "Text Box ( aligned )" ) ) ;
-			contentPanel.addComponent(
-					new TextBox()
-					.setLayoutData( GridLayout.createLayoutData( 
-							GridLayout.Alignment.BEGINNING 
-							, GridLayout.Alignment.CENTER ) ) ) ;
-
-			contentPanel.addComponent( 
-					new Label( "Password Box ( right aligned )" ) ) ;
-			contentPanel.addComponent(
-					new TextBox()
-					.setMask( '*' )
-					.setLayoutData( GridLayout.createLayoutData( 
-							GridLayout.Alignment.END 
-							, GridLayout.Alignment.CENTER ) ) ) ;
-
-			contentPanel.addComponent( 
-					new Label( "Read-only Combo Box ( forced size )" ) ) ;
-			List<String> timezonesAsStrings = new ArrayList<String>() ;
-			for( String id : TimeZone.getAvailableIDs() ) {
-				timezonesAsStrings.add( id ) ;
-			}
-			ComboBox<String> readOnlyComboBox = 
-					new ComboBox<String>( timezonesAsStrings ) ;
-			readOnlyComboBox.setReadOnly( true ) ;
-			readOnlyComboBox.setPreferredSize( new TerminalSize( 20 , 1 ) ) ;
-			contentPanel.addComponent( readOnlyComboBox ) ;
-
-			contentPanel.addComponent( 
-					new Label( "Editable Combo Box ( filled )" ) ) ;
-			contentPanel.addComponent(
-					new ComboBox<String>( 
-							"Item #1" 
-							, "Item #2" 
-							, "Item #3" 
-							, "Item #4" )
-					.setReadOnly( false )
-					.setLayoutData( 
-						GridLayout.createHorizontallyFilledLayoutData( 1 ) ) ) ;
-
-			contentPanel.addComponent( new Label( "Button ( centered )" ) ) ;
-			contentPanel.addComponent( new Button( "Button" , new Runnable() {
-				@Override
-				public void run() {
-					MessageDialog.showMessageDialog( 
-							textGUI , 
-							"MessageBox" , 
-							"This is a message box" , 
-							MessageDialogButton.OK ) ;
-				}
-			} ).setLayoutData( 
-					GridLayout.createLayoutData( 
-							GridLayout.Alignment.CENTER 
-							, GridLayout.Alignment.CENTER ) ) ) ;
-
-			/*contentPanel.addComponent(
-                    new EmptySpace()
-                            .setLayoutData(
-                        GridLayout.createHorizontallyFilledLayoutData( 2 ) ) ) ;
-            contentPanel.addComponent(
-                    new Separator( Direction.HORIZONTAL )
-                            .setLayoutData(
-                   GridLayout.createHorizontallyFilledLayoutData( 2 ) ) ) ;*/
-			contentPanel.addComponent(
-					new Button( "Close" , new Runnable() {
-						@Override
-						public void run() {
-							window.close() ;
-						}
-					} 
-							).setLayoutData(
-					GridLayout.createHorizontallyEndAlignedLayoutData( 2 ) ) ) ;
+//
+//			contentPanel.addComponent( new Label( "Text Box ( aligned )" ) ) ;
+//			contentPanel.addComponent(
+//					new TextBox()
+//					.setLayoutData( GridLayout.createLayoutData( 
+//							GridLayout.Alignment.BEGINNING 
+//							, GridLayout.Alignment.CENTER ) ) ) ;
+//
+//			contentPanel.addComponent( 
+//					new Label( "Password Box ( right aligned )" ) ) ;
+//			contentPanel.addComponent(
+//					new TextBox()
+//					.setMask( '*' )
+//					.setLayoutData( GridLayout.createLayoutData( 
+//							GridLayout.Alignment.END 
+//							, GridLayout.Alignment.CENTER ) ) ) ;
+//
+//			contentPanel.addComponent( 
+//					new Label( "Read-only Combo Box ( forced size )" ) ) ;
+//			List<String> timezonesAsStrings = new ArrayList<String>() ;
+//			for( String id : TimeZone.getAvailableIDs() ) {
+//				timezonesAsStrings.add( id ) ;
+//			}
+//			ComboBox<String> readOnlyComboBox = 
+//					new ComboBox<String>( timezonesAsStrings ) ;
+//			readOnlyComboBox.setReadOnly( true ) ;
+//			readOnlyComboBox.setPreferredSize( new TerminalSize( 20 , 1 ) ) ;
+//			contentPanel.addComponent( readOnlyComboBox ) ;
+//
+//			contentPanel.addComponent( 
+//					new Label( "Editable Combo Box ( filled )" ) ) ;
+//			contentPanel.addComponent(
+//					new ComboBox<String>( 
+//							"Item #1" 
+//							, "Item #2" 
+//							, "Item #3" 
+//							, "Item #4" )
+//					.setReadOnly( false )
+//					.setLayoutData( 
+//						GridLayout.createHorizontallyFilledLayoutData( 1 ) ) ) ;
+//
+//			contentPanel.addComponent( new Label( "Button ( centered )" ) ) ;
+//			contentPanel.addComponent( new Button( "Button" , new Runnable() {
+//				@Override
+//				public void run() {
+//					MessageDialog.showMessageDialog( 
+//							textGUI , 
+//							"MessageBox" , 
+//							"This is a message box" , 
+//							MessageDialogButton.OK ) ;
+//				}
+//			} ).setLayoutData( 
+//					GridLayout.createLayoutData( 
+//							GridLayout.Alignment.CENTER 
+//							, GridLayout.Alignment.CENTER ) ) ) ;
+//
+//			/*contentPanel.addComponent(
+//                    new EmptySpace()
+//                            .setLayoutData(
+//                        GridLayout.createHorizontallyFilledLayoutData( 2 ) ) ) ;
+//            contentPanel.addComponent(
+//                    new Separator( Direction.HORIZONTAL )
+//                            .setLayoutData(
+//                   GridLayout.createHorizontallyFilledLayoutData( 2 ) ) ) ;*/
+//			contentPanel.addComponent(
+//					new Button( "Close" , new Runnable() {
+//						@Override
+//						public void run() {
+//							window.close() ;
+//						}
+//					} 
+//							).setLayoutData(
+//					GridLayout.createHorizontallyEndAlignedLayoutData( 2 ) ) ) ;
 
 			window.setComponent( contentPanel ) ;
 			
