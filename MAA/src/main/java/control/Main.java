@@ -18,7 +18,7 @@ import view.Debug;
 public class Main {
 	public static void main( String[] args ) {
 		boolean running = true ;
-		 
+		
 		//Adding player
 		List<AbstractEntity> entities = new ArrayList<>() ;
 		entities.add( 
@@ -35,12 +35,14 @@ public class Main {
 						new DefaultTerminalFactory().createTerminal() ;
 				Screen screen = new TerminalScreen( terminal ) ) {
 			
+			//Start screen
 			screen.startScreen() ;
+			
+			//Remove cursor
+			screen.setCursorPosition( null ) ;
 			
 			while( running ) {
 				//Processing stuff
-				
-					//Advanced math B)
 				
 				//Graphical stuff
 				
@@ -59,31 +61,79 @@ public class Main {
 				//Input stuff
 				
 					//Get input (blocking)
-				KeyStroke key = screen.readInput() ;
+				KeyStroke input = screen.readInput() ;
 				
-					//EXIT
-				if( ButtonUtils.isButtonPressed( key , KeyType.Escape ) ) {
+					//EXIT ( check escape or input closed )
+				if( ButtonUtils.isButtonPressed( input , KeyType.Escape ) ||
+						ButtonUtils.isButtonPressed( input , KeyType.EOF ) ) {
 					running = false ;
 				}
 				
 					//Player movement
-				player.move( 
-						( ButtonUtils.isButtonPressed( 
-								key , 
-								KeyType.ArrowRight ) ? 1 : 0 ) - 
-						( ButtonUtils.isButtonPressed( 
-								key , 
-								KeyType.ArrowLeft ) ? 1 : 0 ) ,
-						( ButtonUtils.isButtonPressed( 
-								key , 
-								KeyType.ArrowDown ) ? 1 : 0 ) - 
-						( ButtonUtils.isButtonPressed( 
-								key , 
-								KeyType.ArrowUp ) ? 1 : 0 ) ) ;
+				boolean right = 
+						ButtonUtils.isButtonPressed( 
+								input , 
+								KeyType.ArrowRight ) || 
+						ButtonUtils.isButtonPressed( 
+								input , 
+								'9' ) ||
+						ButtonUtils.isButtonPressed( 
+								input , 
+								'3' ) ||
+						ButtonUtils.isButtonPressed( 
+								input , 
+								'6' ) ;
 				
+				boolean left = 
+						ButtonUtils.isButtonPressed( 
+								input , 
+								KeyType.ArrowLeft ) || 
+						ButtonUtils.isButtonPressed( 
+								input , 
+								'7' ) ||
+						ButtonUtils.isButtonPressed( 
+								input , 
+								'1' ) ||
+						ButtonUtils.isButtonPressed( 
+								input , 
+								'4' ) ;
+				
+				boolean up = 
+						ButtonUtils.isButtonPressed( 
+								input , 
+								KeyType.ArrowUp ) || 
+						ButtonUtils.isButtonPressed( 
+								input , 
+								'7' ) ||
+						ButtonUtils.isButtonPressed( 
+								input , 
+								'9' ) ||
+						ButtonUtils.isButtonPressed( 
+								input , 
+								'8' ) ;
+				
+				boolean down = 
+						ButtonUtils.isButtonPressed( 
+								input , 
+								KeyType.ArrowDown ) || 
+						ButtonUtils.isButtonPressed( 
+								input , 
+								'1' ) ||
+						ButtonUtils.isButtonPressed( 
+								input , 
+								'3' ) ||
+						ButtonUtils.isButtonPressed( 
+								input , 
+								'2' ) ;
+				
+				int dirX = ( right ? 1 : 0 ) - ( left ? 1 : 0 ) ;
+				
+				int dirY = ( down ? 1 : 0 ) - ( up ? 1 : 0 ) ;
+				
+				player.move( dirX , dirY ) ;
 			}
 			
-			//End
+			//End screen
 			screen.stopScreen() ;
 		}
 		catch ( Exception e ) {
