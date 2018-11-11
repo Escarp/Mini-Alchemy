@@ -1,210 +1,93 @@
 package control;
 
-import com.googlecode.lanterna.TerminalSize;
-import com.googlecode.lanterna.TextColor;
-import com.googlecode.lanterna.graphics.SimpleTheme;
-import com.googlecode.lanterna.graphics.Theme;
-import com.googlecode.lanterna.gui2.*;
-import com.googlecode.lanterna.gui2.dialogs.MessageDialog;
-import com.googlecode.lanterna.gui2.dialogs.MessageDialogButton;
-import com.googlecode.lanterna.screen.Screen;
-import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
-import com.googlecode.lanterna.terminal.swing.TerminalEmulatorColorConfiguration;
-import com.googlecode.lanterna.terminal.swing.TerminalEmulatorPalette;
-
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.TimeZone;
+
+import com.googlecode.lanterna.input.KeyStroke;
+import com.googlecode.lanterna.input.KeyType;
+import com.googlecode.lanterna.screen.Screen;
+import com.googlecode.lanterna.screen.TerminalScreen;
+import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
+import com.googlecode.lanterna.terminal.Terminal;
+
+import model.entity.AbstractEntity;
+import model.factory.FactoryProducer;
+import util.ButtonUtils;
+import view.Debug;
 
 public class Main {
 	public static void main( String[] args ) {
-		DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory() ;
-		Screen screen = null; 
-		try {
+		boolean running = true ;
+		 
+		//Adding player
+		List<AbstractEntity> entities = new ArrayList<>() ;
+		entities.add( 
+				new FactoryProducer()
+				.getFactory( "Entity" )
+				.getEntity( "Player" )
+				 ) ;
+		AbstractEntity player = entities.get( 0 ) ;
+		player.setX( 5 ) ;
+		player.setY( 5 ) ;
+		
+		try( 
+				Terminal terminal = 
+						new DefaultTerminalFactory().createTerminal() ;
+				Screen screen = new TerminalScreen( terminal ) ) {
 			
-			terminalFactory.setTerminalEmulatorTitle( "Testing names" ) ;
-			terminalFactory.setTerminalEmulatorColorConfiguration( 
-					TerminalEmulatorColorConfiguration.newInstance( 
-							TerminalEmulatorPalette.GNOME_TERMINAL
-					) 
-			) ;
-			
-			screen = terminalFactory.createScreen() ;
 			screen.startScreen() ;
 			
-			TerminalSize size = new TerminalSize( 14 , 10 ) ;
-			ActionListBox actionListBox = new ActionListBox( size ) ;
-			
-			actionListBox.addItem( "Test 1" , new Runnable() {
-				@Override
-				public void run() {
-					System.out.println( "Test1" );
+			while( running ) {
+				//Processing stuff
+				
+					//Advanced math B)
+				
+				//Graphical stuff
+				
+					//Wipe screen
+				screen.clear() ;
+				screen.refresh() ;
+				
+					//Draw entities
+				for( AbstractEntity entity : entities ) {
+					entity.drawSelf( screen ) ;
 				}
-			});
-			
-			actionListBox.addItem( "Test 2" , new Runnable() {
-				@Override
-				public void run() {
-					System.out.println( "Test2" );
+				
+					//Refresh screen
+				screen.refresh() ;
+				
+				//Input stuff
+				
+					//Get input (blocking)
+				KeyStroke key = screen.readInput() ;
+				
+					//EXIT
+				if( ButtonUtils.isButtonPressed( key , KeyType.Escape ) ) {
+					running = false ;
 				}
-			});
+				
+					//Player movement
+				player.move( 
+						( ButtonUtils.isButtonPressed( 
+								key , 
+								KeyType.ArrowRight ) ? 1 : 0 ) - 
+						( ButtonUtils.isButtonPressed( 
+								key , 
+								KeyType.ArrowLeft ) ? 1 : 0 ) ,
+						( ButtonUtils.isButtonPressed( 
+								key , 
+								KeyType.ArrowDown ) ? 1 : 0 ) - 
+						( ButtonUtils.isButtonPressed( 
+								key , 
+								KeyType.ArrowUp ) ? 1 : 0 ) ) ;
+				
+			}
 			
-			actionListBox.addItem( "Test 3" , new Runnable() {
-				@Override
-				public void run() {
-					System.out.println( "Test3" );
-				}
-			});
-			
-			actionListBox.setLayoutData( BorderLayout.Location.CENTER ) ;
-			
-			final WindowBasedTextGUI textGUI = 
-					new MultiWindowTextGUI( screen ) ;
-			
-			final Window window = new BasicWindow( " Window " ) ;
-			Theme theme = SimpleTheme.makeTheme( 
-					true 
-					, TextColor.ANSI.WHITE 
-					, TextColor.ANSI.BLACK 
-					, TextColor.ANSI.WHITE 
-					, TextColor.ANSI.DEFAULT 
-					, TextColor.ANSI.BLACK 
-					, TextColor.ANSI.WHITE 
-					, TextColor.ANSI.RED ) ;
-			window.setTheme( theme ) ;
-			window.setHints( Arrays.asList( 
-					Window.Hint.FULL_SCREEN
-					, Window.Hint.NO_DECORATIONS ) ) ;
-			
-			Panel contentPanel = new Panel( new BorderLayout() ) ;
-			
-//			GridLayout gridLayout = 
-//					( GridLayout )contentPanel.getLayoutManager() ;
-//			gridLayout.setHorizontalSpacing( 3 ) ;
-			
-			contentPanel.addComponent( actionListBox ) ;
-			
-			Label title = 
-					new Label( "This is a label that spans two columns" ) ;
-//			title.setLayoutData( GridLayout.createLayoutData(
-//					GridLayout.Alignment.BEGINNING ,	// Horizontal alignment 
-//														// in the grid cell if 
-//														// the cell is larger 
-//														// than the component's 
-//														// preferred size
-//					
-//					GridLayout.Alignment.BEGINNING ,	// Vertical alignment in 
-//														// the grid cell if the 
-//														// cell is larger than 
-//														// the component's 
-//														// preferred size
-//					
-//					false ,								// Give the component 
-//														// extra horizontal 
-//														// space if available
-//					
-//					false ,								// Give the component 
-//														// extra vertical space 
-//														// if available
-//					
-//					2 ,									// Horizontal span
-//					
-//					1 ) ) ;								// Vertical span
-//
-			contentPanel.addComponent( title ) ;
-//
-//			contentPanel.addComponent( new Label( "Text Box ( aligned )" ) ) ;
-//			contentPanel.addComponent(
-//					new TextBox()
-//					.setLayoutData( GridLayout.createLayoutData( 
-//							GridLayout.Alignment.BEGINNING 
-//							, GridLayout.Alignment.CENTER ) ) ) ;
-//
-//			contentPanel.addComponent( 
-//					new Label( "Password Box ( right aligned )" ) ) ;
-//			contentPanel.addComponent(
-//					new TextBox()
-//					.setMask( '*' )
-//					.setLayoutData( GridLayout.createLayoutData( 
-//							GridLayout.Alignment.END 
-//							, GridLayout.Alignment.CENTER ) ) ) ;
-//
-//			contentPanel.addComponent( 
-//					new Label( "Read-only Combo Box ( forced size )" ) ) ;
-//			List<String> timezonesAsStrings = new ArrayList<String>() ;
-//			for( String id : TimeZone.getAvailableIDs() ) {
-//				timezonesAsStrings.add( id ) ;
-//			}
-//			ComboBox<String> readOnlyComboBox = 
-//					new ComboBox<String>( timezonesAsStrings ) ;
-//			readOnlyComboBox.setReadOnly( true ) ;
-//			readOnlyComboBox.setPreferredSize( new TerminalSize( 20 , 1 ) ) ;
-//			contentPanel.addComponent( readOnlyComboBox ) ;
-//
-//			contentPanel.addComponent( 
-//					new Label( "Editable Combo Box ( filled )" ) ) ;
-//			contentPanel.addComponent(
-//					new ComboBox<String>( 
-//							"Item #1" 
-//							, "Item #2" 
-//							, "Item #3" 
-//							, "Item #4" )
-//					.setReadOnly( false )
-//					.setLayoutData( 
-//						GridLayout.createHorizontallyFilledLayoutData( 1 ) ) ) ;
-//
-//			contentPanel.addComponent( new Label( "Button ( centered )" ) ) ;
-//			contentPanel.addComponent( new Button( "Button" , new Runnable() {
-//				@Override
-//				public void run() {
-//					MessageDialog.showMessageDialog( 
-//							textGUI , 
-//							"MessageBox" , 
-//							"This is a message box" , 
-//							MessageDialogButton.OK ) ;
-//				}
-//			} ).setLayoutData( 
-//					GridLayout.createLayoutData( 
-//							GridLayout.Alignment.CENTER 
-//							, GridLayout.Alignment.CENTER ) ) ) ;
-//
-//			/*contentPanel.addComponent(
-//                    new EmptySpace()
-//                            .setLayoutData(
-//                        GridLayout.createHorizontallyFilledLayoutData( 2 ) ) ) ;
-//            contentPanel.addComponent(
-//                    new Separator( Direction.HORIZONTAL )
-//                            .setLayoutData(
-//                   GridLayout.createHorizontallyFilledLayoutData( 2 ) ) ) ;*/
-//			contentPanel.addComponent(
-//					new Button( "Close" , new Runnable() {
-//						@Override
-//						public void run() {
-//							window.close() ;
-//						}
-//					} 
-//							).setLayoutData(
-//					GridLayout.createHorizontallyEndAlignedLayoutData( 2 ) ) ) ;
-
-			window.setComponent( contentPanel ) ;
-			
-			textGUI.addWindowAndWait( window ) ;
-
+			//End
+			screen.stopScreen() ;
 		}
 		catch ( Exception e ) {
-			e.printStackTrace() ;
-		}
-		finally {
-			if( screen != null ) {
-				try {
-					screen.stopScreen() ;
-				}
-				catch( IOException e ) {
-					e.printStackTrace() ;
-				}
-			}
+			Debug.logErr( "Main: catch" , e ) ;
 		}
 	}
 }
