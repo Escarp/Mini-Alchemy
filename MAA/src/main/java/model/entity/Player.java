@@ -26,8 +26,6 @@ public class Player extends AbstractEntity {
 	
 	@Override
 	public void move() {
-		// TODO Auto-generated method stub
-
 	}
 	
 	@Override
@@ -103,8 +101,6 @@ public class Player extends AbstractEntity {
 
 	@Override
 	public void update() {
-		// TODO Auto-generated method stub
-
 	}
 
 }

@@ -2,6 +2,7 @@ package control;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
@@ -15,8 +16,25 @@ import view.Debug;
 import view.ScreenFunctions;
 
 public class Main {
+	public static Properties properties = null ;
+	
+	public static void initProperties(){
+		properties = new Properties() ;
+		
+		try {
+			properties.load( Main.class.getClassLoader().getResourceAsStream( 
+					"project.properties" ) ) ;
+		}
+		catch ( Exception e ) {
+			Debug.logErr( "Main: initProperties" , e ) ;
+		}
+	}
+	
 	public static void main( String[] args ) {
 		boolean running = true ;
+		
+		//Initialize properties
+		initProperties() ;
 		
 		//Adding player
 		List<AbstractEntity> entities = new ArrayList<>() ;
@@ -29,7 +47,9 @@ public class Main {
 		player.setX( 5 ) ;
 		player.setY( 5 ) ;
 		
-		try( 	Terminal terminal = ScreenFunctions.startTerminal() ;
+		try( 	Terminal terminal = ScreenFunctions.startTerminal( 
+						properties.getProperty( "artifactId" ) + " " + 
+						properties.getProperty( "version" ) ) ;
 				Screen screen = new TerminalScreen( terminal ) ) {
 			
 			//Initialize screen

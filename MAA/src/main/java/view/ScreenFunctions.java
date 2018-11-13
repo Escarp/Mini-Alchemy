@@ -23,7 +23,7 @@ public class ScreenFunctions {
 	public static void wipeScreen( Screen screen ) throws IOException{
 		//Wipe screen
 		screen.clear() ;
-		screen.refresh() ;
+		refreshScreen( screen ) ;
 	}
 	
 	public static void refreshScreen( Screen screen ) throws IOException{
@@ -34,9 +34,9 @@ public class ScreenFunctions {
 		screen.stopScreen() ;
 	}
 	
-	public static Terminal startTerminal() throws IOException{
+	public static Terminal startTerminal( String terminalName ) throws IOException{
 		return new DefaultTerminalFactory()
-		.setTerminalEmulatorTitle( "Mini Alchemy" )
+		.setTerminalEmulatorTitle( terminalName )
 		.setTerminalEmulatorColorConfiguration( 
 				TerminalEmulatorColorConfiguration.newInstance( 
 				TerminalEmulatorPalette.GNOME_TERMINAL ) )
