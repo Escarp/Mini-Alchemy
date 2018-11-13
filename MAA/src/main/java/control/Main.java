@@ -20,7 +20,6 @@ public class Main {
 	
 	public static void initProperties(){
 		properties = new Properties() ;
-		
 		try {
 			properties.load( Main.class.getClassLoader().getResourceAsStream( 
 					"project.properties" ) ) ;
