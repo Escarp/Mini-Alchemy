@@ -7,15 +7,12 @@ import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.screen.TerminalScreen;
-import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
-import com.googlecode.lanterna.terminal.swing.TerminalEmulatorColorConfiguration;
-import com.googlecode.lanterna.terminal.swing.TerminalEmulatorPalette;
-
 import model.entity.AbstractEntity;
 import model.factory.FactoryProducer;
 import util.ButtonUtils;
 import view.Debug;
+import view.ScreenFunctions;
 
 public class Main {
 	public static void main( String[] args ) {
@@ -32,43 +29,36 @@ public class Main {
 		player.setX( 5 ) ;
 		player.setY( 5 ) ;
 		
-		try( 
-				Terminal terminal = 
-						new DefaultTerminalFactory()
-						.setTerminalEmulatorTitle( "Mini Alchemy" )
-						.setTerminalEmulatorColorConfiguration( 
-								TerminalEmulatorColorConfiguration.newInstance( 
-								TerminalEmulatorPalette.GNOME_TERMINAL ) )
-						.createTerminal() ;
+		try( 	Terminal terminal = ScreenFunctions.startTerminal() ;
 				Screen screen = new TerminalScreen( terminal ) ) {
 			
-			//Start screen
-			screen.startScreen() ;
-			
-			//Remove cursor
-			screen.setCursorPosition( null ) ;
+			//Initialize screen
+			ScreenFunctions.initScreen( screen ) ;
 			
 			while( running ) {
-				//Processing stuff
+				//XXX Processing stuff
 				
-				//Graphical stuff
+				//XXX Graphical stuff
 				
-					//Wipe screen
-				screen.clear() ;
-				screen.refresh() ;
+					//Wipe screen DO NOT MOVE this needs to be BEFORE drawing
+				ScreenFunctions.wipeScreen( screen ) ;	
+				
+				//TODO: Draw map
+				//TODO: Draw items on floor
 				
 					//Draw entities
-				for( AbstractEntity entity : entities ) {
-					entity.drawSelf( screen ) ;
-				}
+				ScreenFunctions.drawEntities( screen , entities ) ;
 				
-					//Refresh screen
-				screen.refresh() ;
+					//Refresh screen DO NOT MOVE this needs to be AFTER drawing
+				ScreenFunctions.refreshScreen( screen ) ;
 				
-				//Input stuff
+				//XXX Input stuff
 				
 					//Get input (blocking)
 				KeyStroke input = screen.readInput() ;
+				
+					//Player movement
+				player.move( input ) ;
 				
 					//EXIT ( check escape or input closed )
 				if( ButtonUtils.isButtonPressed( input , KeyType.Escape ) ||
@@ -76,72 +66,10 @@ public class Main {
 					running = false ;
 				}
 				
-					//Player movement
-				boolean right = 
-						ButtonUtils.isButtonPressed( 
-								input , 
-								KeyType.ArrowRight ) || 
-						ButtonUtils.isButtonPressed( 
-								input , 
-								'9' ) ||
-						ButtonUtils.isButtonPressed( 
-								input , 
-								'3' ) ||
-						ButtonUtils.isButtonPressed( 
-								input , 
-								'6' ) ;
-				
-				boolean left = 
-						ButtonUtils.isButtonPressed( 
-								input , 
-								KeyType.ArrowLeft ) || 
-						ButtonUtils.isButtonPressed( 
-								input , 
-								'7' ) ||
-						ButtonUtils.isButtonPressed( 
-								input , 
-								'1' ) ||
-						ButtonUtils.isButtonPressed( 
-								input , 
-								'4' ) ;
-				
-				boolean up = 
-						ButtonUtils.isButtonPressed( 
-								input , 
-								KeyType.ArrowUp ) || 
-						ButtonUtils.isButtonPressed( 
-								input , 
-								'7' ) ||
-						ButtonUtils.isButtonPressed( 
-								input , 
-								'9' ) ||
-						ButtonUtils.isButtonPressed( 
-								input , 
-								'8' ) ;
-				
-				boolean down = 
-						ButtonUtils.isButtonPressed( 
-								input , 
-								KeyType.ArrowDown ) || 
-						ButtonUtils.isButtonPressed( 
-								input , 
-								'1' ) ||
-						ButtonUtils.isButtonPressed( 
-								input , 
-								'3' ) ||
-						ButtonUtils.isButtonPressed( 
-								input , 
-								'2' ) ;
-				
-				int dirX = ( right ? 1 : 0 ) - ( left ? 1 : 0 ) ;
-				
-				int dirY = ( down ? 1 : 0 ) - ( up ? 1 : 0 ) ;
-				
-				player.move( dirX , dirY ) ;
 			}
 			
 			//End screen
-			screen.stopScreen() ;
+			ScreenFunctions.stopScreen( screen ) ;
 		}
 		catch ( Exception e ) {
 			Debug.logErr( "Main: catch" , e ) ;

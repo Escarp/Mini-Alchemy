@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import com.googlecode.lanterna.TextCharacter;
 import com.googlecode.lanterna.TextColor;
+import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.screen.Screen;
 
 public abstract class AbstractEntity {
@@ -68,6 +69,8 @@ public abstract class AbstractEntity {
 	
 	public abstract void move( int dirX , int dirY ) ;
 	
+	public abstract void move( KeyStroke input ) ;
+	
 	public abstract void update() ;
 	
 	public void drawSelf( Screen screen ) 
@@ -79,5 +82,4 @@ public abstract class AbstractEntity {
 				backgroundColor ) 
 				) ;
 	}
-	
 }
