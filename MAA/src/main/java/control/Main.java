@@ -9,6 +9,8 @@ import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
+import com.googlecode.lanterna.terminal.swing.TerminalEmulatorColorConfiguration;
+import com.googlecode.lanterna.terminal.swing.TerminalEmulatorPalette;
 
 import model.entity.AbstractEntity;
 import model.factory.FactoryProducer;
@@ -32,7 +34,12 @@ public class Main {
 		
 		try( 
 				Terminal terminal = 
-						new DefaultTerminalFactory().createTerminal() ;
+						new DefaultTerminalFactory()
+						.setTerminalEmulatorTitle( "Mini Alchemy" )
+						.setTerminalEmulatorColorConfiguration( 
+								TerminalEmulatorColorConfiguration.newInstance( 
+								TerminalEmulatorPalette.GNOME_TERMINAL ) )
+						.createTerminal() ;
 				Screen screen = new TerminalScreen( terminal ) ) {
 			
 			//Start screen

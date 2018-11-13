@@ -6,8 +6,8 @@ public class Player extends AbstractEntity {
 
 	public Player( int x , int y ) {
 		this.setCharacter( '@' ) ;
-		this.setForegroundColor( new TextColor.RGB( 255 , 255 , 255 ) ) ;
-		this.setBackgroundColor( new TextColor.RGB( 0 , 0 , 0 ) ) ;
+		this.setForegroundColor( TextColor.ANSI.WHITE ) ;
+		this.setBackgroundColor( TextColor.ANSI.BLACK ) ;
 		this.setSpeed( 1 ) ;
 		this.setX( x ) ;
 		this.setY( y ) ;
