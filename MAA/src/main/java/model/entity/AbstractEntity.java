@@ -1,19 +1,21 @@
 package model.entity;
 
 import java.io.IOException;
-
+import java.util.ArrayList;
 import com.googlecode.lanterna.TextCharacter;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.screen.Screen;
 
+import model.tile.AbstractTile;
+
 public abstract class AbstractEntity {
-	private int x ;
-	private int y ;
-	private int speed ;
-	private char character ;
-	private TextColor foregroundColor ;
-	private TextColor backgroundColor ;
+	protected int x ;
+	protected int y ;
+	protected int speed ;
+	protected char character ;
+	protected TextColor foregroundColor ;
+	protected TextColor backgroundColor ;
 	
 	//Getters
 	public int getX() {
@@ -70,6 +72,10 @@ public abstract class AbstractEntity {
 	public abstract void move( int dirX , int dirY ) ;
 	
 	public abstract void move( KeyStroke input ) ;
+	
+	public abstract void move( 
+			KeyStroke input , 
+			ArrayList<ArrayList<AbstractTile>> map ) ;
 	
 	public abstract void update() ;
 	
