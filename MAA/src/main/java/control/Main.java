@@ -105,7 +105,7 @@ public class Main {
 					//Wipe screen DO NOT MOVE this needs to be BEFORE drawing
 				ScreenFunctions.wipeScreen( screen ) ;	
 				
-				//TODO: Draw map
+				//Draw map
 				for( int y = 0 ; y < screen.getTerminalSize().getRows() ; y++ ){
 					for(
 							int x = 0 ; 
