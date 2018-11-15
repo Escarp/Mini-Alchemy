@@ -3,6 +3,7 @@ package view;
 import java.io.IOException;
 import java.util.List;
 
+import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
@@ -34,12 +35,16 @@ public class ScreenFunctions {
 		screen.stopScreen() ;
 	}
 	
-	public static Terminal startTerminal( String terminalName ) throws IOException{
+	public static Terminal startTerminal( 
+			String terminalName , 
+			int width , 
+			int height ) throws IOException{
 		return new DefaultTerminalFactory()
 		.setTerminalEmulatorTitle( terminalName )
 		.setTerminalEmulatorColorConfiguration( 
 				TerminalEmulatorColorConfiguration.newInstance( 
 				TerminalEmulatorPalette.GNOME_TERMINAL ) )
+		.setInitialTerminalSize( new TerminalSize( width , height ) )
 		.createTerminal() ;
 	}
 	

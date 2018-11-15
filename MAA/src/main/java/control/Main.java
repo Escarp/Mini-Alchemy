@@ -27,6 +27,7 @@ public class Main {
 		try {
 			properties.load( Main.class.getClassLoader().getResourceAsStream( 
 					"project.properties" ) ) ;
+			Debug.logln( "properties: " + properties.toString() , true ) ;
 		}
 		catch ( Exception e ) {
 			Debug.logErr( "Main: initProperties" , e ) ;
@@ -54,11 +55,19 @@ public class Main {
 		
 		try( 	Terminal terminal = ScreenFunctions.startTerminal( 
 						properties.getProperty( "artifactId" ) + " " + 
-						properties.getProperty( "version" ) ) ;
+								properties.getProperty( "version" ) ,
+						Integer.parseInt( 
+								properties.getProperty( "screenWidth" ) ) , 
+						Integer.parseInt( 
+								properties.getProperty( "screenHeight" ) ) ) ;
 				Screen screen = new TerminalScreen( terminal ) ) {
 			
 			//Initialize screen
 			ScreenFunctions.initScreen( screen ) ;
+			
+			Debug.logln( 
+					"terminal: " + screen.getTerminalSize().toString() , 
+					true ) ;
 			
 			//Init Map
 			for( int y = 0 ; y < screen.getTerminalSize().getRows() ; y++ ){
@@ -117,7 +126,9 @@ public class Main {
 								x , 
 								y , 
 								new TextCharacter( 
-										map.get( y ).get( x ).getCharacter() ) ) ;
+										map.get( y )
+										.get( x )
+										.getCharacter() ) ) ;
 					}
 				}
 				

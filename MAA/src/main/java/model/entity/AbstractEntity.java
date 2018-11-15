@@ -98,6 +98,42 @@ public abstract class AbstractEntity {
 		position.add( direction ) ;
 	}
 	
+	public void moveAndCollide( 
+			Vector2 direction , 
+			ArrayList<ArrayList<AbstractTile>> map ){
+		for( int i = 1 ; i < speed + 1 ; i++ ){
+			if( 
+					map.get( (int)( Vector2.add( position , direction )
+							.getY() ) )
+					.get( (int)( Vector2.add( position , direction ).getX() ) )
+					.isPassable() 
+					&& 
+					map.get( (int)( Vector2.add( position , direction )
+							.getY() ) )
+					.get( (int)( Vector2.add( position , direction ).getX() ) )
+					.isWalkable() ){
+				move( direction , 1 ) ;
+			}
+		}
+	}
+	
+	public void moveAndCollide( ArrayList<ArrayList<AbstractTile>> map ){
+		for( int i = 1 ; i < speed + 1 ; i++ ){
+			if( 
+					map.get( (int)( Vector2.add( position , direction )
+							.getY() ) )
+					.get( (int)( Vector2.add( position , direction ).getX() ) )
+					.isPassable() 
+					&& 
+					map.get( (int)( Vector2.add( position , direction )
+							.getY() ) )
+					.get( (int)( Vector2.add( position , direction ).getX() ) )
+					.isWalkable() ){
+				move( direction , 1 ) ;
+			}
+		}
+	}
+	
 	public abstract void update() ;
 	
 	public void drawSelf( Screen screen ) 

@@ -15,7 +15,7 @@ public class Player extends AbstractEntity {
 		character = '@' ;
 		foregroundColor = TextColor.ANSI.WHITE ;
 		backgroundColor = TextColor.ANSI.BLACK ;
-		speed = 3 ;
+		speed = 1 ;
 		this.position = position ;
 	}
 	
@@ -23,7 +23,7 @@ public class Player extends AbstractEntity {
 		character = '@' ;
 		foregroundColor = TextColor.ANSI.WHITE ;
 		backgroundColor = TextColor.ANSI.BLACK ;
-		speed = 3 ;
+		speed = 1 ;
 	}
 	
 	@Override
@@ -60,17 +60,6 @@ public class Player extends AbstractEntity {
 				( right ? 1 : 0 ) - ( left ? 1 : 0 ) ,
 				( down ? 1 : 0 ) - ( up ? 1 : 0 ) ) ;
 		
-		for( int i = 1 ; i < speed + 1 ; i++ ){
-			if( 
-					map.get( (int)( Vector2.add( position , direction ).getY() ) )
-					.get( (int)( Vector2.add( position , direction ).getX() ) )
-					.isPassable() 
-					&& 
-					map.get( (int)( Vector2.add( position , direction ).getY() ) )
-					.get( (int)( Vector2.add( position , direction ).getX() ) )
-					.isWalkable() ){
-				move( direction , 1 ) ;
-			}
-		}
+		moveAndCollide( map ) ;
 	}
 }
