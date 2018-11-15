@@ -15,6 +15,7 @@ import model.FactoryProducer;
 import model.entity.AbstractEntity;
 import model.tile.AbstractTile;
 import util.ButtonUtils;
+import util.physics.Vector2;
 import view.Debug;
 import view.ScreenFunctions;
 
@@ -46,8 +47,7 @@ public class Main {
 				.getEntity( "Player" )
 				 ) ;
 		AbstractEntity player = entities.get( 0 ) ;
-		player.setX( 5 ) ;
-		player.setY( 5 ) ;
+		player.setPosition( new Vector2( 5 , 5 ) ) ;
 		
 		ArrayList<ArrayList<AbstractTile>> map = 
 				new ArrayList<ArrayList<AbstractTile>>() ;
@@ -60,6 +60,7 @@ public class Main {
 			//Initialize screen
 			ScreenFunctions.initScreen( screen ) ;
 			
+			//Init Map
 			for( int y = 0 ; y < screen.getTerminalSize().getRows() ; y++ ){
 				map.add( new ArrayList<AbstractTile>() ) ;
 				for( 
@@ -94,9 +95,10 @@ public class Main {
 			
 			for( int i = 5 ; i < 15 ; i++ ){
 				map.get( 10 ).get( i ).setWalkable( false ) ;
-				map.get( 10 ).get( i ).setCharacter( '%' );
+				map.get( 10 ).get( i ).setCharacter( ' ' );
 			}
 			
+			//XXX Main Loop
 			while( running ) {
 				//XXX Processing stuff
 				

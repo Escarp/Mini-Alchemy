@@ -3,6 +3,7 @@ package model.factory;
 import model.entity.AbstractEntity;
 import model.entity.Player;
 import model.tile.AbstractTile;
+import util.physics.Vector2;
 
 public class FactoryEntity extends AbstractFactory {
 
@@ -16,7 +17,7 @@ public class FactoryEntity extends AbstractFactory {
 	
 	public AbstractEntity getEntity( String entity , int x , int y ) {
 		if( entity.equalsIgnoreCase( "PLAYER" ) ) {
-			return new Player( x , y ) ;
+			return new Player( new Vector2( x , y ) ) ;
 		}
 		return null;
 	}

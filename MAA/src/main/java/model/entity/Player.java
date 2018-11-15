@@ -7,174 +7,70 @@ import com.googlecode.lanterna.input.KeyType;
 
 import model.tile.AbstractTile;
 import util.ButtonUtils;
+import util.physics.Vector2;
 
 public class Player extends AbstractEntity {
 
-	public Player( int x , int y ) {
+	public Player( Vector2 position ) {
 		character = '@' ;
 		foregroundColor = TextColor.ANSI.WHITE ;
 		backgroundColor = TextColor.ANSI.BLACK ;
-		speed = 1 ;
-		this.x = x ;
-		this.y = y ;
+		speed = 3 ;
+		this.position = position ;
 	}
 	
 	public Player() {
 		character = '@' ;
 		foregroundColor = TextColor.ANSI.WHITE ;
 		backgroundColor = TextColor.ANSI.BLACK ;
-		speed = 1 ;
+		speed = 3 ;
 	}
 	
-	@Override
-	public void move() {
-	}
-	
-	@Override
-	public void move( int dirx , int diry ) {
-		x = x + ( dirx * speed ) ;
-		y = y + ( diry * speed ) ;
-	}
-	
-	@Override
-	public void move( KeyStroke input ){
-		boolean right = 
-				ButtonUtils.isButtonPressed( 
-						input , 
-						KeyType.ArrowRight ) || 
-				ButtonUtils.isButtonPressed( 
-						input , 
-						'9' ) ||
-				ButtonUtils.isButtonPressed( 
-						input , 
-						'3' ) ||
-				ButtonUtils.isButtonPressed( 
-						input , 
-						'6' ) ;
-		
-		boolean left = 
-				ButtonUtils.isButtonPressed( 
-						input , 
-						KeyType.ArrowLeft ) || 
-				ButtonUtils.isButtonPressed( 
-						input , 
-						'7' ) ||
-				ButtonUtils.isButtonPressed( 
-						input , 
-						'1' ) ||
-				ButtonUtils.isButtonPressed( 
-						input , 
-						'4' ) ;
-		
-		boolean up = 
-				ButtonUtils.isButtonPressed( 
-						input , 
-						KeyType.ArrowUp ) || 
-				ButtonUtils.isButtonPressed( 
-						input , 
-						'7' ) ||
-				ButtonUtils.isButtonPressed( 
-						input , 
-						'9' ) ||
-				ButtonUtils.isButtonPressed( 
-						input , 
-						'8' ) ;
-		
-		boolean down = 
-				ButtonUtils.isButtonPressed( 
-						input , 
-						KeyType.ArrowDown ) || 
-				ButtonUtils.isButtonPressed( 
-						input , 
-						'1' ) ||
-				ButtonUtils.isButtonPressed( 
-						input , 
-						'3' ) ||
-				ButtonUtils.isButtonPressed( 
-						input , 
-						'2' ) ;
-		
-		int dirX = ( right ? 1 : 0 ) - ( left ? 1 : 0 ) ;
-		
-		int dirY = ( down ? 1 : 0 ) - ( up ? 1 : 0 ) ;
-		
-		move( dirX , dirY ) ;
-	}
-
 	@Override
 	public void update() {
 	}
 
 	@Override
-	public void move(KeyStroke input, ArrayList<ArrayList<AbstractTile>> map) {
-		boolean right = 
-				ButtonUtils.isButtonPressed( 
-						input , 
-						KeyType.ArrowRight ) || 
-				ButtonUtils.isButtonPressed( 
-						input , 
-						'9' ) ||
-				ButtonUtils.isButtonPressed( 
-						input , 
-						'3' ) ||
-				ButtonUtils.isButtonPressed( 
-						input , 
-						'6' ) ;
-		
-		boolean left = 
-				ButtonUtils.isButtonPressed( 
-						input , 
-						KeyType.ArrowLeft ) || 
-				ButtonUtils.isButtonPressed( 
-						input , 
-						'7' ) ||
-				ButtonUtils.isButtonPressed( 
-						input , 
-						'1' ) ||
-				ButtonUtils.isButtonPressed( 
-						input , 
-						'4' ) ;
-		
-		boolean up = 
-				ButtonUtils.isButtonPressed( 
-						input , 
-						KeyType.ArrowUp ) || 
-				ButtonUtils.isButtonPressed( 
-						input , 
-						'7' ) ||
-				ButtonUtils.isButtonPressed( 
-						input , 
-						'9' ) ||
-				ButtonUtils.isButtonPressed( 
-						input , 
-						'8' ) ;
-		
-		boolean down = 
-				ButtonUtils.isButtonPressed( 
-						input , 
-						KeyType.ArrowDown ) || 
-				ButtonUtils.isButtonPressed( 
-						input , 
-						'1' ) ||
-				ButtonUtils.isButtonPressed( 
-						input , 
-						'3' ) ||
-				ButtonUtils.isButtonPressed( 
-						input , 
-						'2' ) ;
-		
-		int dirX = ( right ? 1 : 0 ) - ( left ? 1 : 0 ) ;
-		
-		int dirY = ( down ? 1 : 0 ) - ( up ? 1 : 0 ) ;
-		
-		int tempX = x + ( dirX * speed ) ;
-		int tempY = y + ( dirY * speed ) ;
-		
-		if( map.get( tempY ).get( tempX ).isPassable() && 
-				map.get( tempY ).get( tempX ).isWalkable() ){
-			move( dirX , dirY ) ;
-		}
-		
+	public void move() {
+	}
+	
+	@Override
+	public void move(KeyStroke input) {
 	}
 
+	@Override
+	public void move(KeyStroke input, ArrayList<ArrayList<AbstractTile>> map) {
+		boolean right = 
+				ButtonUtils.isButtonPressed( input , KeyType.ArrowRight ) || 
+				ButtonUtils.areButtonsPressed( input ,'9' , '6' , '3' ) ;
+		
+		boolean left = 
+				ButtonUtils.isButtonPressed( input , KeyType.ArrowLeft ) || 
+				ButtonUtils.areButtonsPressed( input , '7' , '4' , '1' ) ;
+		
+		boolean up = 
+				ButtonUtils.isButtonPressed( input , KeyType.ArrowUp ) || 
+				ButtonUtils.areButtonsPressed( input , '7' , '8' , '9' ) ;
+		
+		boolean down = 
+				ButtonUtils.isButtonPressed( input , KeyType.ArrowDown ) || 
+				ButtonUtils.areButtonsPressed( input , '1' , '2' , '3' ) ;
+		
+		direction = new Vector2( 
+				( right ? 1 : 0 ) - ( left ? 1 : 0 ) ,
+				( down ? 1 : 0 ) - ( up ? 1 : 0 ) ) ;
+		
+		for( int i = 1 ; i < speed + 1 ; i++ ){
+			if( 
+					map.get( (int)( Vector2.add( position , direction ).getY() ) )
+					.get( (int)( Vector2.add( position , direction ).getX() ) )
+					.isPassable() 
+					&& 
+					map.get( (int)( Vector2.add( position , direction ).getY() ) )
+					.get( (int)( Vector2.add( position , direction ).getX() ) )
+					.isWalkable() ){
+				move( direction , 1 ) ;
+			}
+		}
+	}
 }

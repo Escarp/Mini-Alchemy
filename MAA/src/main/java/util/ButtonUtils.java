@@ -33,4 +33,57 @@ public final class ButtonUtils {
 						isShiftDown ) ) ;
 	}
 	
+	public static boolean areButtonsPressed( 
+			KeyStroke input , 
+			KeyType... types ){
+		boolean pressed = false ;
+		
+		for( KeyType type : types ){
+			pressed = isButtonPressed( input , type ) ;
+			if( pressed ){
+				break ;
+			}
+		}
+		
+		return pressed ;
+	}
+	
+	public static boolean areButtonsPressed( 
+			KeyStroke input , 
+			Character... characters ){
+		boolean pressed = false ;
+		
+		for( Character character : characters ){
+			pressed = isButtonPressed( input , character ) ;
+			if( pressed ){
+				break ;
+			}
+		}
+		
+		return pressed ;
+	}
+	
+	public static boolean areButtonsPressed( 
+			KeyStroke input , 
+			boolean isCtrlDown ,
+			boolean isShiftDown ,
+			boolean isAltDown ,
+			Character... characters ) {
+		boolean pressed = false ;
+		
+		for( Character character : characters ){
+			pressed = isButtonPressed( 
+					input , 
+					character , 
+					isCtrlDown , 
+					isShiftDown , 
+					isAltDown ) ;
+			if( pressed ){
+				break ;
+			}
+		}
+		
+		return pressed ;
+	}
+	
 }
