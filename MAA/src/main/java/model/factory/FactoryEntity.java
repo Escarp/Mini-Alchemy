@@ -1,7 +1,6 @@
 package model.factory;
 
 import model.entity.AbstractEntity;
-import model.entity.Camera;
 import model.entity.Player;
 import model.tile.AbstractTile;
 
@@ -12,9 +11,7 @@ public class FactoryEntity extends AbstractFactory {
 		if( entity.equalsIgnoreCase( "PLAYER" ) ) {
 			return new Player() ;
 		}
-		else if( entity.equalsIgnoreCase( "CAMERA" ) ) {
-			return new Camera() ;
-		}
+		
 		return null;
 	}
 

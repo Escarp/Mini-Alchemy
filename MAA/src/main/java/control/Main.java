@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Properties;
 
 import com.googlecode.lanterna.TerminalSize;
+import com.googlecode.lanterna.TextCharacter;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.screen.Screen;
@@ -13,10 +14,10 @@ import com.googlecode.lanterna.terminal.Terminal;
 
 import model.FactoryProducer;
 import model.entity.AbstractEntity;
-import model.entity.Camera;
 import model.tile.AbstractTile;
 import util.ButtonUtils;
 import util.physics.Vector2;
+import view.Camera;
 import view.Debug;
 import view.ScreenFunctions;
 
@@ -49,13 +50,6 @@ public class Main {
 			//Adding player
 		entities.add( producer.getFactory( "Entity" ).getEntity( "Player" ) ) ;
 		AbstractEntity player = entities.get( 0 ) ;
-		player.setPosition( new Vector2( 5 , 5 ) ) ;
-		
-			//Adding camera
-		entities.add( producer.getFactory( "entity" ).getEntity( "camera" ) ) ;
-		Camera camera = ( Camera ) entities.get( 1 ) ;
-		camera.setTarget( player ) ;
-		camera.setSize( new Vector2( screenWidth , screenHeight ) ) ;
 		
 		Debug.logln( "initEntities : initialized " + entities.size() + 
 				" entities" , debug ) ;
@@ -75,13 +69,20 @@ public class Main {
 			int rows = Tsize.getRows() ;
 			int cols = Tsize.getColumns() ;
 			
+			player.setPosition( new Vector2( 5 , 5 ) ) ;
+			
+			//Initialize camera
+			Camera camera = new Camera( 
+					new Vector2( cols - ( cols / 5 ) , rows / 2 )  , 
+					player.getPosition() ) ;
+			
 			//Initialize screen
 			ScreenFunctions.initScreen( screen ) ;
 			
 			Debug.logln( "terminalSize: " + Tsize.toString() , debug ) ;
 			
 			//Init Map
-			initMap( map , rows , cols ) ;
+			initMap( map , 100 , 100 ) ;
 			
 			for( int i = 5 ; i < 15 ; i++ ){
 				map.get( 10 ).get( i ).setWalkable( false ) ;
@@ -92,23 +93,46 @@ public class Main {
 			while( running ) {
 				//XXX Processing stuff
 				
-					//Update entities
-				for( AbstractEntity entity : entities ){
-					entity.update() ;
-				}
+				camera.setCenter( player.getPosition() ) ;
+				
+				Vector2[] visibleMap = camera.getVisibleMapIndexes( map ) ;
+				int minX = (int)visibleMap[ 0 ].getX() ;
+				int maxX = (int)visibleMap[ 1 ].getX() ;
+				
+				int minY = (int)visibleMap[ 0 ].getY() ;
+				int maxY = (int)visibleMap[ 1 ].getY() ;
 				
 				//XXX Graphical stuff
 				
 					//Wipe screen DO NOT MOVE-this needs to be BEFORE drawing
 				ScreenFunctions.wipeScreen( screen ) ;	
 				
-					//Draw map
-				ScreenFunctions.drawMap( screen , map ) ;
+				int mX = minX ;
+				int mY = minY ;
 				
-				//TODO: Draw items on floor
-				
-					//Draw entities
-				ScreenFunctions.drawEntities( screen , entities ) ;
+				for( int y = rows / 4 ; y < rows - ( rows / 4 ) ; y++ ){
+					mX = minX ;
+					for( int x = 0 ; x < cols - ( cols / 4 ) ; x++ ){
+						//TODO: Draw what the camera can see
+						
+							//Draw map
+						if ( mY < maxY && mX < maxX ) {
+							
+							screen.setCharacter( 
+									x , 
+									y ,  
+									new TextCharacter( 
+											map.get( mY ).get( mX )
+											.getCharacter() ) ) ;
+							
+						}
+						mX++ ;
+							//TODO: Draw items on floor
+							
+							//TODO: Draw entities
+					}
+					mY++ ;
+				}
 				
 					//Refresh screen DO NOT MOVE-this needs to be AFTER drawing
 				ScreenFunctions.refreshScreen( screen ) ;

@@ -1,6 +1,5 @@
 package model.entity;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import com.googlecode.lanterna.TextCharacter;
 import com.googlecode.lanterna.TextColor;
@@ -17,8 +16,13 @@ public abstract class AbstractEntity {
 	protected char character ;
 	protected TextColor foregroundColor ;
 	protected TextColor backgroundColor ;
+	protected boolean visible ;
 	
 	//Getters
+	public boolean isVisible(){
+		return visible ;
+	}
+	
 	public Vector2 getPosition(){
 		return position ;
 	}
@@ -44,6 +48,10 @@ public abstract class AbstractEntity {
 	}
 
 	//Setters
+	public void setVisible( boolean visible ){
+		this.visible = visible ;
+	}
+	
 	public void setPosition( Vector2 position ) {
 		this.position = position ;
 	}
@@ -136,9 +144,7 @@ public abstract class AbstractEntity {
 	
 	public abstract void update() ;
 	
-	public void drawSelf( Screen screen ) 
-			throws IOException {
-		
+	public void drawSelf( Screen screen ) {
 		screen.setCharacter( 
 				(int)position.getX() , 
 				(int)position.getY() , 
