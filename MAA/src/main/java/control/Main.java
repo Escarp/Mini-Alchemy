@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Properties;
 
 import com.googlecode.lanterna.TerminalSize;
-import com.googlecode.lanterna.TextCharacter;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.screen.Screen;
@@ -28,6 +27,7 @@ public class Main {
 	public static int screenWidth = 80 ;
 	public static int screenHeight = 24 ;
 	public static boolean debug = false ;
+	public static FactoryProducer producer = new FactoryProducer() ;
 	
 	public static void main( String[] args ) {
 		Debug.logln( "[Game] : [Start]" ) ;
@@ -35,22 +35,21 @@ public class Main {
 		boolean running = true ;
 		
 		if( args.length > 0 ){
-			debug = Boolean.getBoolean( args[ 0 ] ) ;
+			debug = Boolean.valueOf( args[ 0 ] ) ;
 		}
 		
 		//Initialize properties
 		initProperties() ;
 		
-		//Adding player
+		//Initialize entities
 		Debug.logln( "initEntities : [Start]" , debug ) ;
 		List<AbstractEntity> entities = new ArrayList<>() ;
-		entities.add( 
-				new FactoryProducer()
-				.getFactory( "Entity" )
-				.getEntity( "Player" )
-				 ) ;
+		entities.add( producer.getFactory( "Entity" ).getEntity( "Player" ) ) ;
+		
+			//Adding player
 		AbstractEntity player = entities.get( 0 ) ;
 		player.setPosition( new Vector2( 5 , 5 ) ) ;
+		
 		Debug.logln( "initEntities : initialized " + entities.size() + 
 				" entities" , debug ) ;
 		Debug.logln( "initEntities : [End]" , debug ) ;
@@ -79,7 +78,7 @@ public class Main {
 			
 			for( int i = 5 ; i < 15 ; i++ ){
 				map.get( 10 ).get( i ).setWalkable( false ) ;
-				map.get( 10 ).get( i ).setCharacter( ' ' );
+				map.get( 10 ).get( i ).setCharacter( '!' );
 			}
 			
 			//XXX Main Loop
@@ -88,31 +87,25 @@ public class Main {
 				
 				//XXX Graphical stuff
 				
-					//Wipe screen DO NOT MOVE this needs to be BEFORE drawing
+					//Wipe screen DO NOT MOVE-this needs to be BEFORE drawing
 				ScreenFunctions.wipeScreen( screen ) ;	
 				
 					//Draw map
-				for( int y = 0 ; y < rows ; y++ ){
-					for( int x = 0 ; x < cols ; x++ ){
-						screen.setCharacter( x , y , new TextCharacter( 
-								map.get( y ).get( x ).getCharacter() ) ) ;
-					}
-				}
+				ScreenFunctions.drawMap( screen , map ) ;
 				
 				//TODO: Draw items on floor
 				
 					//Draw entities
 				ScreenFunctions.drawEntities( screen , entities ) ;
 				
-					//Refresh screen DO NOT MOVE this needs to be AFTER drawing
-				ScreenFunctions.refreshScreen( screen ) ;
+					//Refresh screen DO NOT MOVE-this needs to be AFTER drawing
 				ScreenFunctions.refreshScreen( screen ) ;
 				
 				//XXX Input stuff
 				boolean doRepeat = false ;
 				do{
 					doRepeat = false ;
-						//Get input (blocking)
+						//Get input ( blocking )
 					KeyStroke input = screen.readInput() ;
 					
 						//EXIT ( check escape or input closed )
@@ -162,10 +155,10 @@ public class Main {
 		artifactId = properties.getProperty( "artifactId" ) ;
 		version = properties.getProperty( "version" ) ;
 		name = artifactId + " " + version ;
-		screenWidth = Integer.parseInt( 
-				properties.getProperty( "screenWidth" ) ) ;
-		screenHeight = Integer.parseInt( 
-				properties.getProperty( "screenHeight" ) ) ;
+		screenWidth = Integer.parseInt( properties.getProperty( 
+				"screenWidth" ) ) ;
+		screenHeight = Integer.parseInt( properties.getProperty( 
+				"screenHeight" ) ) ;
 		
 		Debug.logln( "initProperties : [End]" , debug ) ;
 	}
@@ -179,22 +172,16 @@ public class Main {
 			map.add( new ArrayList<AbstractTile>() ) ;
 			for( int x = 0 ; x < cols ; x++ ){
 				if( x == 0 || x == cols - 1 ){
-					map.get( y ).add( 
-							new FactoryProducer()
-							.getFactory( "TILE" )
+					map.get( y ).add( producer.getFactory( "TILE" )
 							.getTile( "WALL" ) ) ;
 				}
 				else if( y == 0 || y == rows - 1 ){
-					map.get( y ).add( 
-							new FactoryProducer()
-							.getFactory( "TILE" )
+					map.get( y ).add( producer.getFactory( "TILE" )
 							.getTile( "WALL" ) ) ;
 				}
 				else
 				{
-					map.get( y ).add( 
-							new FactoryProducer()
-							.getFactory( "TILE" )
+					map.get( y ).add( producer.getFactory( "TILE" )
 							.getTile( "FLOOR" ) ) ;
 				}
 			}
