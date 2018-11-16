@@ -13,6 +13,7 @@ import com.googlecode.lanterna.terminal.Terminal;
 
 import model.FactoryProducer;
 import model.entity.AbstractEntity;
+import model.entity.Camera;
 import model.tile.AbstractTile;
 import util.ButtonUtils;
 import util.physics.Vector2;
@@ -44,11 +45,17 @@ public class Main {
 		//Initialize entities
 		Debug.logln( "initEntities : [Start]" , debug ) ;
 		List<AbstractEntity> entities = new ArrayList<>() ;
-		entities.add( producer.getFactory( "Entity" ).getEntity( "Player" ) ) ;
 		
 			//Adding player
+		entities.add( producer.getFactory( "Entity" ).getEntity( "Player" ) ) ;
 		AbstractEntity player = entities.get( 0 ) ;
 		player.setPosition( new Vector2( 5 , 5 ) ) ;
+		
+			//Adding camera
+		entities.add( producer.getFactory( "entity" ).getEntity( "camera" ) ) ;
+		Camera camera = ( Camera ) entities.get( 1 ) ;
+		camera.setTarget( player ) ;
+		camera.setSize( new Vector2( screenWidth , screenHeight ) ) ;
 		
 		Debug.logln( "initEntities : initialized " + entities.size() + 
 				" entities" , debug ) ;
@@ -84,6 +91,11 @@ public class Main {
 			//XXX Main Loop
 			while( running ) {
 				//XXX Processing stuff
+				
+					//Update entities
+				for( AbstractEntity entity : entities ){
+					entity.update() ;
+				}
 				
 				//XXX Graphical stuff
 				

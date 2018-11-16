@@ -17,11 +17,11 @@ public class Debug {
 	}
 	
 	public static void logErr( String name , Exception e ) {
-		logln( "[Error] : " + name + ": " + e.getMessage() , false ) ;
+		logln( "[Error] : " + name + ": " + e.getMessage() ) ;
 		log( "[Stack] : \n" ) ;
 		for( int i = 0 ; i < e.getStackTrace().length ; i++ ) {
-			logln( "\t" + e.getStackTrace()[i] , false ) ;
+			logln( "\t" + e.getStackTrace()[i] ) ;
 		}
-		logln( "[Stack] : [End]" , false ) ;
+		logln( "[Stack] : [End]" ) ;
 	}
 }
