@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.TextCharacter;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
@@ -21,26 +22,27 @@ import view.ScreenFunctions;
 
 public class Main {
 	public static Properties properties = null ;
-	
-	public static void initProperties(){
-		properties = new Properties() ;
-		try {
-			properties.load( Main.class.getClassLoader().getResourceAsStream( 
-					"project.properties" ) ) ;
-			Debug.logln( "properties: " + properties.toString() , true ) ;
-		}
-		catch ( Exception e ) {
-			Debug.logErr( "Main: initProperties" , e ) ;
-		}
-	}
+	public static String artifactId = "" ;
+	public static String version = "" ;
+	public static String name = "" ;
+	public static int screenWidth = 80 ;
+	public static int screenHeight = 24 ;
+	public static boolean debug = false ;
 	
 	public static void main( String[] args ) {
+		Debug.logln( "[Game] : [Start]" ) ;
+		
 		boolean running = true ;
+		
+		if( args.length > 0 ){
+			debug = Boolean.getBoolean( args[ 0 ] ) ;
+		}
 		
 		//Initialize properties
 		initProperties() ;
 		
 		//Adding player
+		Debug.logln( "initEntities : [Start]" , debug ) ;
 		List<AbstractEntity> entities = new ArrayList<>() ;
 		entities.add( 
 				new FactoryProducer()
@@ -49,58 +51,31 @@ public class Main {
 				 ) ;
 		AbstractEntity player = entities.get( 0 ) ;
 		player.setPosition( new Vector2( 5 , 5 ) ) ;
+		Debug.logln( "initEntities : initialized " + entities.size() + 
+				" entities" , debug ) ;
+		Debug.logln( "initEntities : [End]" , debug ) ;
 		
 		ArrayList<ArrayList<AbstractTile>> map = 
 				new ArrayList<ArrayList<AbstractTile>>() ;
 		
 		try( 	Terminal terminal = ScreenFunctions.startTerminal( 
-						properties.getProperty( "artifactId" ) + " " + 
-								properties.getProperty( "version" ) ,
-						Integer.parseInt( 
-								properties.getProperty( "screenWidth" ) ) , 
-						Integer.parseInt( 
-								properties.getProperty( "screenHeight" ) ) ) ;
+						name , 
+						screenWidth , 
+						screenHeight );
 				Screen screen = new TerminalScreen( terminal ) ) {
+			
+			TerminalSize Tsize = screen.getTerminalSize() ;
+			
+			int rows = Tsize.getRows() ;
+			int cols = Tsize.getColumns() ;
 			
 			//Initialize screen
 			ScreenFunctions.initScreen( screen ) ;
 			
-			Debug.logln( 
-					"terminal: " + screen.getTerminalSize().toString() , 
-					true ) ;
+			Debug.logln( "terminalSize: " + Tsize.toString() , debug ) ;
 			
 			//Init Map
-			for( int y = 0 ; y < screen.getTerminalSize().getRows() ; y++ ){
-				map.add( new ArrayList<AbstractTile>() ) ;
-				for( 
-						int x = 0 ; 
-						x < screen.getTerminalSize().getColumns() ; 
-						x++ ){
-					if( 
-							x == 0 || 
-							x == screen.getTerminalSize().getColumns() - 1 ){
-						map.get( y ).add( 
-								new FactoryProducer()
-								.getFactory( "TILE" )
-								.getTile( "WALL" ) ) ;
-					}
-					else if( 
-							y == 0 || 
-							y == screen.getTerminalSize().getRows() - 1 ){
-						map.get( y ).add( 
-								new FactoryProducer()
-								.getFactory( "TILE" )
-								.getTile( "WALL" ) ) ;
-					}
-					else
-					{
-						map.get( y ).add( 
-								new FactoryProducer()
-								.getFactory( "TILE" )
-								.getTile( "FLOOR" ) ) ;
-					}
-				}
-			}
+			initMap( map , rows , cols ) ;
 			
 			for( int i = 5 ; i < 15 ; i++ ){
 				map.get( 10 ).get( i ).setWalkable( false ) ;
@@ -117,18 +92,10 @@ public class Main {
 				ScreenFunctions.wipeScreen( screen ) ;	
 				
 					//Draw map
-				for( int y = 0 ; y < screen.getTerminalSize().getRows() ; y++ ){
-					for(
-							int x = 0 ; 
-							x < screen.getTerminalSize().getColumns() ; 
-							x++ ){
-						screen.setCharacter( 
-								x , 
-								y , 
-								new TextCharacter( 
-										map.get( y )
-										.get( x )
-										.getCharacter() ) ) ;
+				for( int y = 0 ; y < rows ; y++ ){
+					for( int x = 0 ; x < cols ; x++ ){
+						screen.setCharacter( x , y , new TextCharacter( 
+								map.get( y ).get( x ).getCharacter() ) ) ;
 					}
 				}
 				
@@ -139,20 +106,33 @@ public class Main {
 				
 					//Refresh screen DO NOT MOVE this needs to be AFTER drawing
 				ScreenFunctions.refreshScreen( screen ) ;
+				ScreenFunctions.refreshScreen( screen ) ;
 				
 				//XXX Input stuff
-				
-					//Get input (blocking)
-				KeyStroke input = screen.readInput() ;
-				
-					//Player movement
-				player.move( input , map ) ;
-				
-					//EXIT ( check escape or input closed )
-				if( ButtonUtils.isButtonPressed( input , KeyType.Escape ) ||
-						ButtonUtils.isButtonPressed( input , KeyType.EOF ) ) {
-					running = false ;
-				}
+				boolean doRepeat = false ;
+				do{
+					doRepeat = false ;
+						//Get input (blocking)
+					KeyStroke input = screen.readInput() ;
+					
+						//EXIT ( check escape or input closed )
+					if( ButtonUtils.areButtonsPressed( 
+							input , KeyType.Escape , KeyType.EOF ) ) {
+						running = false ;
+						doRepeat = false ;
+						break ;
+					}
+					
+						//Player movement
+					Vector2 oldPos = new Vector2( 
+							player.getPosition().getX() , 
+							player.getPosition().getY() ) ;
+					player.move( input , map ) ;
+					if( oldPos.equals( player.getPosition() ) ){
+						doRepeat = true ;
+					}
+					
+				}while( doRepeat ) ;
 				
 			}
 			
@@ -162,5 +142,65 @@ public class Main {
 		catch ( Exception e ) {
 			Debug.logErr( "Main: catch" , e ) ;
 		}
+		finally{
+			Debug.logln( "[Game] : [End]" ) ;
+		}
+	}
+
+	public static void initProperties(){
+		Debug.logln( "initProperties : [Start]" , debug ) ;
+		properties = new Properties() ;
+		try {
+			properties.load( Main.class.getClassLoader().getResourceAsStream( 
+					"project.properties" ) ) ;
+			Debug.logln( "properties: " + properties.toString() , debug ) ;
+		}
+		catch ( Exception e ) {
+			Debug.logErr( "Main: initProperties" , e ) ;
+		}
+		
+		artifactId = properties.getProperty( "artifactId" ) ;
+		version = properties.getProperty( "version" ) ;
+		name = artifactId + " " + version ;
+		screenWidth = Integer.parseInt( 
+				properties.getProperty( "screenWidth" ) ) ;
+		screenHeight = Integer.parseInt( 
+				properties.getProperty( "screenHeight" ) ) ;
+		
+		Debug.logln( "initProperties : [End]" , debug ) ;
+	}
+	
+	private static void initMap( 
+			ArrayList<ArrayList<AbstractTile>> map , 
+			int rows, 
+			int cols) {
+		Debug.logln( "initMap : [Start]" , debug ) ;
+		for( int y = 0 ; y < rows ; y++ ){
+			map.add( new ArrayList<AbstractTile>() ) ;
+			for( int x = 0 ; x < cols ; x++ ){
+				if( x == 0 || x == cols - 1 ){
+					map.get( y ).add( 
+							new FactoryProducer()
+							.getFactory( "TILE" )
+							.getTile( "WALL" ) ) ;
+				}
+				else if( y == 0 || y == rows - 1 ){
+					map.get( y ).add( 
+							new FactoryProducer()
+							.getFactory( "TILE" )
+							.getTile( "WALL" ) ) ;
+				}
+				else
+				{
+					map.get( y ).add( 
+							new FactoryProducer()
+							.getFactory( "TILE" )
+							.getTile( "FLOOR" ) ) ;
+				}
+			}
+		}
+		Debug.logln( "initMap : initialized " + 
+				map.size() * map.get( 0 ).size() + " tiles" , debug ) ;
+		Debug.logln( "initMap : [End]" , debug ) ;
 	}
 }

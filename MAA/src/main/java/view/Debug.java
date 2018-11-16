@@ -8,7 +8,11 @@ public class Debug {
 	public static void logln( String msg , boolean debug ) {
 		if( debug ){
 			msg = "[Debug] : " + msg ;
+			System.out.println( msg ) ;
 		}
+	}
+	
+	public static void logln( String msg ) {	
 		System.out.println( msg ) ;
 	}
 	
