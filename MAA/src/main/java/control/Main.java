@@ -93,45 +93,65 @@ public class Main {
 			while( running ) {
 				//XXX Processing stuff
 				
-				camera.setCenter( player.getPosition() ) ;
+				//camera.setCenter( player.getPosition() ) ;
+				camera.setPosition( new Vector2( 
+						player.getPosition().getX() - 
+								( camera.getDimensions().getX() / 2 ) , 
+						player.getPosition().getY() - 
+								( camera.getDimensions().getY() / 2 ) ) ) ;
 				
-				Vector2[] visibleMap = camera.getVisibleMapIndexes( map ) ;
-				int minX = (int)visibleMap[ 0 ].getX() ;
-				int maxX = (int)visibleMap[ 1 ].getX() ;
+				camera.setIndices( map ) ;
 				
-				int minY = (int)visibleMap[ 0 ].getY() ;
-				int maxY = (int)visibleMap[ 1 ].getY() ;
+				camera.setVisibleEntities( entities ) ;
+				
+				Vector2 minIndices = camera.getMinIndices() ;
+				Vector2 maxIndices = camera.getMaxIndices() ;
 				
 				//XXX Graphical stuff
 				
 					//Wipe screen DO NOT MOVE-this needs to be BEFORE drawing
 				ScreenFunctions.wipeScreen( screen ) ;	
 				
-				int mX = minX ;
-				int mY = minY ;
+				int indX = (int)minIndices.getX() ;
+				int indY = (int)minIndices.getY() ;
 				
-				for( int y = rows / 4 ; y < rows - ( rows / 4 ) ; y++ ){
-					mX = minX ;
-					for( int x = 0 ; x < cols - ( cols / 4 ) ; x++ ){
-						//TODO: Draw what the camera can see
+				for( int y = rows / 4 ; y < rows - ( rows / 4 ) ; y++ ) {
+					indX = (int)minIndices.getX() ;
+					for( int x = 0 ; x < cols - ( cols / 4 ) ; x++ ) {
+						//Draw what the camera can see
 						
 							//Draw map
-						if ( mY < maxY && mX < maxX ) {
+						if ( 	indY < maxIndices.getY() && 
+								indX < maxIndices.getX() ) {
 							
 							screen.setCharacter( 
 									x , 
 									y ,  
 									new TextCharacter( 
-											map.get( mY ).get( mX )
+											map.get( indY ).get( indX )
 											.getCharacter() ) ) ;
 							
 						}
-						mX++ ;
+						
 							//TODO: Draw items on floor
-							
-							//TODO: Draw entities
+						
+							//Draw entities
+						for( AbstractEntity entity : entities ) {
+							if( entity.isVisible() ) {
+								if( 	entity.getPosition().getX() == indX &&
+										entity.getPosition().getY() == indY ) {
+									screen.setCharacter( 
+											x , 
+											y ,  
+											new TextCharacter( 
+													entity.getCharacter() ) ) ;
+								}
+							}
+						}
+						
+						indX++ ;
 					}
-					mY++ ;
+					indY++ ;
 				}
 				
 					//Refresh screen DO NOT MOVE-this needs to be AFTER drawing
@@ -182,7 +202,7 @@ public class Main {
 		try {
 			properties.load( Main.class.getClassLoader().getResourceAsStream( 
 					"project.properties" ) ) ;
-			Debug.logln( "properties: " + properties.toString() , debug ) ;
+			Debug.logln( "properties : " + properties.toString() , debug ) ;
 		}
 		catch ( Exception e ) {
 			Debug.logErr( "Main: initProperties" , e ) ;
