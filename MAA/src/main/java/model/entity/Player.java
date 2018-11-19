@@ -7,7 +7,8 @@ import com.googlecode.lanterna.input.KeyType;
 
 import model.tile.AbstractTile;
 import util.ButtonUtils;
-import util.physics.Vector2;
+import util.physics.Vector2d;
+import util.physics.Vector2i;
 
 public class Player extends AbstractEntity {
 	private int viewRadius ;
@@ -22,7 +23,7 @@ public class Player extends AbstractEntity {
 		this.viewRadius = viewRadius ;
 	}
 	
-	public Player( Vector2 position ) {
+	public Player( Vector2d position ) {
 		character = '@' ;
 		foregroundColor = TextColor.ANSI.WHITE ;
 		backgroundColor = TextColor.ANSI.BLACK ;
@@ -67,7 +68,7 @@ public class Player extends AbstractEntity {
 				ButtonUtils.isButtonPressed( input , KeyType.ArrowDown ) || 
 				ButtonUtils.areButtonsPressed( input , '1' , '2' , '3' ) ;
 		
-		direction = new Vector2( 
+		direction = new Vector2i( 
 				( right ? 1 : 0 ) - ( left ? 1 : 0 ) ,
 				( down ? 1 : 0 ) - ( up ? 1 : 0 ) ) ;
 		

@@ -5,62 +5,58 @@ import java.util.List;
 
 import model.entity.AbstractEntity;
 import model.tile.AbstractTile;
-import util.physics.Vector2;
+import util.physics.Vector2d;
+import util.physics.Vector2i;
 
 public class Camera {
-	private Vector2 dimensions ;
-	private Vector2 position ;
-	private Vector2 minIndices ;
-	private Vector2 maxIndices ;
+	private Vector2i dimensions ;
+	private Vector2i position ;
+	private Vector2i minIndices ;
+	private Vector2i maxIndices ;
 	
 	//Getters
-	public Vector2 getDimensions() {
+	public Vector2i getDimensions() {
 		return dimensions;
 	}
 
-	public Vector2 getPosition() {
+	public Vector2i getPosition() {
 		return position;
 	}
 	
-	public Vector2 getMinIndices() {
+	public Vector2i getMinIndices() {
 		return minIndices ;
 	}
 	
-	public Vector2 getMaxIndices() {
+	public Vector2i getMaxIndices() {
 		return maxIndices ;
 	}
 
 	//Setters
-	public void setDimensions(Vector2 dimensions) {
+	public void setDimensions(Vector2i dimensions) {
 		this.dimensions = dimensions;
 	}
 
-	public void setPosition(Vector2 center) {
+	public void setPosition(Vector2i center) {
 		this.position = center;
 	}
 	
-	public void setMinIndices( Vector2 minIndices ) {
+	public void setMinIndices( Vector2i minIndices ) {
 		this.minIndices = minIndices ;
 	}
 	
-	public void setMaxIndices( Vector2 maxIndices ) {
+	public void setMaxIndices( Vector2i maxIndices ) {
 		this.maxIndices = maxIndices ;
 	}
 
 	//Constructors
-	public Camera( Vector2 dimensions , Vector2 center ) {
+	public Camera( Vector2i dimensions , Vector2i center ) {
 		this.dimensions = dimensions ;
 		this.position = center ;
 	}
 	
 	public void setIndices( ArrayList<ArrayList<AbstractTile>> map ) {
-		/*FIXME : find a way to remove the +5 and the -1 or to have them 
-		 * dynamic. This only works if terminal is 100*30. This seems to be a 
-		 * rounding problem.
-		 */
-		
-		minIndices = new Vector2() ;
-		maxIndices = new Vector2() ;
+		minIndices = new Vector2i() ;
+		maxIndices = new Vector2i() ;
 		
 		//MinIndices
 		if( position.getX() < 0 ) {
@@ -93,8 +89,8 @@ public class Camera {
 		}
 		
 		//Safeguards
-		if( minIndices.getX() > map.get( 0 ).size() - dimensions.getX() + 5 ) {
-			minIndices.setX( map.get( 0 ).size() - dimensions.getX() + 5 ) ;
+		if( minIndices.getX() > map.get( 0 ).size() - dimensions.getX() ) {
+			minIndices.setX( map.get( 0 ).size() - dimensions.getX() ) ;
 		}
 		if( minIndices.getY() > map.size() - dimensions.getY() - 1 ) {
 			minIndices.setY( map.size() - dimensions.getY() - 1 ) ;
@@ -104,7 +100,7 @@ public class Camera {
 			maxIndices.setX( dimensions.getX() ) ;
 		}
 		if( maxIndices.getY() < dimensions.getY() ) {
-			maxIndices.setY( dimensions.getY() + 1 ) ;
+			maxIndices.setY( dimensions.getY() ) ;
 		}
 	}
 	

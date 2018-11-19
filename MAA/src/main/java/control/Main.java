@@ -17,7 +17,8 @@ import model.FactoryProducer;
 import model.entity.AbstractEntity;
 import model.tile.AbstractTile;
 import util.ButtonUtils;
-import util.physics.Vector2;
+import util.physics.Vector2d;
+import util.physics.Vector2i;
 import view.Camera;
 import view.Debug;
 import view.ScreenFunctions;
@@ -70,14 +71,14 @@ public class Main {
 			int cols = Tsize.getColumns() ;
 			Debug.logln( "terminalSize: " + Tsize.toString() , debug ) ;
 			
-			player.setPosition( new Vector2( 5 , 5 ) ) ;
+			player.setPosition( new Vector2d( 5d , 5d ) ) ;
 			
 			//Initialize camera
 			Camera camera = new Camera( 
-					new Vector2( 
-							(int)( cols - ( cols / 5 ) ) , 
-							(int)( rows / 2 ) )  , 
-					new Vector2() ) ;
+					new Vector2i( 
+							cols - ( cols / 5 ) , 
+							rows / 2 ) , 
+					new Vector2i() ) ;
 			
 			//Initialize screen
 			ScreenFunctions.initScreen( screen ) ;
@@ -99,18 +100,18 @@ public class Main {
 				//XXX Processing stuff
 				
 				//camera.setCenter( player.getPosition() ) ;
-				camera.setPosition( new Vector2( 
-						player.getPosition().getX() - 
-								( camera.getDimensions().getX() / 2 ) , 
-						player.getPosition().getY() - 
-								( camera.getDimensions().getY() / 2 ) ) ) ;
+				camera.setPosition( new Vector2i( 
+						(int)( player.getPosition().getX() - 
+								( camera.getDimensions().getX() / 2 ) ) , 
+						(int)( player.getPosition().getY() - 
+								( camera.getDimensions().getY() / 2 ) ) ) ) ;
 				
 				camera.setIndices( map ) ;
 				
 				camera.setVisibleEntities( entities ) ;
 				
-				Vector2 minIndices = camera.getMinIndices() ;
-				Vector2 maxIndices = camera.getMaxIndices() ;
+				Vector2i minIndices = camera.getMinIndices() ;
+				Vector2i maxIndices = camera.getMaxIndices() ;
 				
 				//XXX Graphical stuff
 				
@@ -122,7 +123,7 @@ public class Main {
 				
 				for( int y = rows / 4 ; y < rows - ( rows / 4 ) ; y++ ) {
 					indX = (int)minIndices.getX() ;
-					for( int x = 0 ; x < cols - ( cols / 4 ) ; x++ ) {
+					for( int x = 0 ; x < cols - ( cols / 5 ) ; x++ ) {
 						//Draw what the camera can see
 						
 							//Draw map
@@ -185,7 +186,7 @@ public class Main {
 					}
 					
 						//Player movement
-					Vector2 oldPos = new Vector2( 
+					Vector2d oldPos = new Vector2d( 
 							player.getPosition().getX() , 
 							player.getPosition().getY() ) ;
 					player.move( input , map ) ;

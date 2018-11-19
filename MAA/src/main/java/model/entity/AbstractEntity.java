@@ -4,11 +4,12 @@ import java.util.ArrayList;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.input.KeyStroke;
 import model.tile.AbstractTile;
-import util.physics.Vector2;
+import util.physics.Vector2d;
+import util.physics.Vector2i;
 
 public abstract class AbstractEntity {
-	protected Vector2 position ;
-	protected Vector2 direction ;
+	protected Vector2d position ;
+	protected Vector2i direction ;
 	protected int speed ;
 	protected char character ;
 	protected TextColor foregroundColor ;
@@ -20,11 +21,11 @@ public abstract class AbstractEntity {
 		return visible ;
 	}
 	
-	public Vector2 getPosition(){
+	public Vector2d getPosition(){
 		return position ;
 	}
 	
-	public Vector2 getDirection(){
+	public Vector2i getDirection(){
 		return direction ;
 	}
 
@@ -49,11 +50,11 @@ public abstract class AbstractEntity {
 		this.visible = visible ;
 	}
 	
-	public void setPosition( Vector2 position ) {
+	public void setPosition( Vector2d position ) {
 		this.position = position ;
 	}
 	
-	public void setDirection( Vector2 direction ){
+	public void setDirection( Vector2i direction ){
 		this.direction = direction ;
 	}
 
@@ -82,40 +83,40 @@ public abstract class AbstractEntity {
 			ArrayList<ArrayList<AbstractTile>> map ) ;
 	
 	public void move( int x , int y ) {
-		position.setX( x ) ;
-		position.setY( y ) ;
+		position.setX( (double) x ) ;
+		position.setY( (double) y ) ;
 	}
 	
-	public void move( int x , int y , int speed ) {
-		Vector2 res = new Vector2( x , y ) ;
+	public void move( double x , double y , int speed ) {
+		Vector2d res = new Vector2d( x , y ) ;
 		res.multiply( speed ) ;
 		position.add( res ) ;
 	}
 	
-	public void move( Vector2 position ) {
+	public void move( Vector2d position ) {
 		position.multiply( speed ) ;
 		this.position.setX( position.getX() ) ;
 		this.position.setY( position.getY() ) ;
 	}
 	
-	public void move( Vector2 direction , int speed ) {
+	public void move( Vector2i direction , int speed ) {
 		direction.multiply( speed ) ;
 		position.add( direction ) ;
 	}
 	
 	public void moveAndCollide( 
-			Vector2 direction , 
+			Vector2i direction , 
 			ArrayList<ArrayList<AbstractTile>> map ){
 		for( int i = 1 ; i < speed + 1 ; i++ ){
 			if( 
-					map.get( (int)( Vector2.add( position , direction )
-							.getY() ) )
-					.get( (int)( Vector2.add( position , direction ).getX() ) )
+					map.get( Vector2i.add( position , direction )
+							.getY() )
+					.get( Vector2i.add( position , direction ).getX() )
 					.isPassable() 
 					&& 
-					map.get( (int)( Vector2.add( position , direction )
-							.getY() ) )
-					.get( (int)( Vector2.add( position , direction ).getX() ) )
+					map.get( Vector2i.add( position , direction )
+							.getY() )
+					.get( Vector2i.add( position , direction ).getX() )
 					.isWalkable() ){
 				move( direction , 1 ) ;
 			}
@@ -125,14 +126,14 @@ public abstract class AbstractEntity {
 	public void moveAndCollide( ArrayList<ArrayList<AbstractTile>> map ){
 		for( int i = 1 ; i < speed + 1 ; i++ ){
 			if( 
-					map.get( (int)( Vector2.add( position , direction )
-							.getY() ) )
-					.get( (int)( Vector2.add( position , direction ).getX() ) )
+					map.get( Vector2i.add( position , direction )
+							.getY() )
+					.get( Vector2i.add( position , direction ).getX() )
 					.isPassable() 
 					&& 
-					map.get( (int)( Vector2.add( position , direction )
-							.getY() ) )
-					.get( (int)( Vector2.add( position , direction ).getX() ) )
+					map.get( Vector2i.add( position , direction )
+							.getY() )
+					.get( Vector2i.add( position , direction ).getX() )
 					.isWalkable() ){
 				move( direction , 1 ) ;
 			}
