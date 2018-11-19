@@ -46,7 +46,9 @@ public class Vector2i extends AbstractVector2<Integer> {
 		this.x += other.x ;
 		this.y += other.y ;
 		this.value = (int)Math.sqrt( ( this.x * this.x ) + ( this.y * this.y ) ) ;
-		this.magnitude = (int)Math.tanh( this.y / this.x ) ;
+		if( this.x != 0 ){
+			this.magnitude = (int)Math.tanh( this.y / this.x ) ;
+		}
 	}
 	
 	public static Vector2i add( Vector2d vec1 , Vector2i vec2 ) {
@@ -58,7 +60,9 @@ public class Vector2i extends AbstractVector2<Integer> {
 		result.value = (int)Math.sqrt( 
 				( result.x * result.x ) + 
 				( result.y * result.y ) ) ;
-		result.magnitude = (int)Math.tanh( result.y / result.x ) ;
+		if( result.x != 0 ) {
+			result.magnitude = (int)Math.tanh( result.y / result.x ) ;
+		}
 		
 		return result ;
 	}
