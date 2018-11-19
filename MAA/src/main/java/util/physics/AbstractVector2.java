@@ -1,5 +1,7 @@
 package util.physics;
 
+import com.sun.javafx.collections.MappingChange.Map;
+
 public class AbstractVector2<T> {
 	protected T x ;
 	protected T y ;
@@ -44,5 +46,11 @@ public class AbstractVector2<T> {
 	public AbstractVector2( T x , T y ){
 		this.x = x ;
 		this.y = y ;
+	}
+	
+	public static double distance( Vector2d from , Vector2d to ) {
+		return Math.sqrt( 
+				( Math.pow( ( to.x - from.x ) , 2 ) + 
+				Math.pow( ( to.y - from.y ) , 2 ) ) ) ;
 	}
 }

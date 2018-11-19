@@ -15,8 +15,10 @@ import com.googlecode.lanterna.terminal.Terminal;
 
 import model.FactoryProducer;
 import model.entity.AbstractEntity;
+import model.entity.Player;
 import model.tile.AbstractTile;
 import util.ButtonUtils;
+import util.physics.AbstractVector2;
 import util.physics.Vector2d;
 import util.physics.Vector2i;
 import view.Camera;
@@ -51,7 +53,8 @@ public class Main {
 		
 			//Adding player
 		entities.add( producer.getFactory( "Entity" ).getEntity( "Player" ) ) ;
-		AbstractEntity player = entities.get( 0 ) ;
+		Player player = (Player)entities.get( 0 ) ;
+		player.setViewRadius( 5 );
 		
 		Debug.logln( "initEntities : initialized " + entities.size() + 
 				" entities" , debug ) ;
@@ -95,6 +98,11 @@ public class Main {
 						TextColor.ANSI.RED );
 			}
 			
+			for( int i = 20 ; i < 45 ; i++ ){
+				map.get( 10 ).set( i, producer.getFactory( "TILE" )
+						.getTile( "WALL" ) ) ;
+			}
+			
 			//XXX Main Loop
 			while( running ) {
 				//XXX Processing stuff
@@ -129,16 +137,38 @@ public class Main {
 							//Draw map
 						if ( 	indY < maxIndices.getY() && 
 								indX < maxIndices.getX() ) {
-							screen.setCharacter( 
-									x , 
-									y ,  
-									new TextCharacter( 
-											map.get( indY ).get( indX )
-												.getCharacter() ,
-											map.get( indY ).get( indX )
-												.getForegroundColor() ,
-											map.get( indY ).get( indX )
-												.getBackgroundColor() ) ) ;
+							if( AbstractVector2.distance( 
+									player.getPosition() , 
+									new Vector2d( 
+											(double)indX , 
+											(double)indY ) ) < 
+									(double)player.getViewRadius() ){
+								map.get( indY ).get( indX )
+								.setDiscovered( true ) ;
+								screen.setCharacter( 
+										x , 
+										y ,  
+										new TextCharacter( 
+												map.get( indY ).get( indX )
+													.getCharacter() ,
+												map.get( indY ).get( indX )
+													.getForegroundColor() ,
+												map.get( indY ).get( indX )
+													.getBackgroundColor() ) ) ;
+							}
+							else{
+								if( map.get( indY ).get( indX )
+										.isDiscovered() ){
+									screen.setCharacter( 
+											x , 
+											y ,  
+											new TextCharacter( 
+													map.get( indY ).get( indX )
+														.getCharacter() ,
+													TextColor.ANSI.WHITE ,
+													TextColor.ANSI.BLACK ) ) ;
+								}
+							}
 							
 						}
 						

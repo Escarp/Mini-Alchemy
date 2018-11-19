@@ -8,8 +8,13 @@ public class AbstractTile {
 	protected char character ;
 	protected TextColor foregroundColor ;
 	protected TextColor backgroundColor ;
+	protected boolean discovered ;
 	
 	//Getters
+	public boolean isDiscovered() {
+		return discovered ;
+	}
+	
 	public boolean isPassable() {
 		return passable;
 	}
@@ -22,12 +27,14 @@ public class AbstractTile {
 	public TextColor getForegroundColor() {
 		return foregroundColor;
 	}
-
 	public TextColor getBackgroundColor() {
 		return backgroundColor;
 	}
 	
 	//Setters
+	public void setDiscovered( boolean discovered ) {
+		this.discovered = discovered ;
+	}
 	public void setPassable(boolean passable) {
 		this.passable = passable;
 	}
