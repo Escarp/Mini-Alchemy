@@ -1,6 +1,10 @@
 package util.physics;
 
 public class Vector2 {
+	/*FIXME : make this into an interface to make an int variant to avoid 
+	 * rounding problems
+	 */
+	
 	private double x ;
 	private double y ;
 	private double value ;	

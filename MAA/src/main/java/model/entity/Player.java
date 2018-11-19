@@ -10,7 +10,18 @@ import util.ButtonUtils;
 import util.physics.Vector2;
 
 public class Player extends AbstractEntity {
-
+	private int viewRadius ;
+	
+	//Getters
+	public int getViewRadius(){
+		return viewRadius ;
+	}
+	
+	//Setters
+	public void setViewRadius( int viewRadius ){
+		this.viewRadius = viewRadius ;
+	}
+	
 	public Player( Vector2 position ) {
 		character = '@' ;
 		foregroundColor = TextColor.ANSI.WHITE ;

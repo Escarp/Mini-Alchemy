@@ -6,6 +6,7 @@ import java.util.Properties;
 
 import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.TextCharacter;
+import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.screen.Screen;
@@ -87,6 +88,10 @@ public class Main {
 			for( int i = 5 ; i < 15 ; i++ ){
 				map.get( 10 ).get( i ).setWalkable( false ) ;
 				map.get( 10 ).get( i ).setCharacter( '!' );
+				map.get( 10 ).get( i ).setForegroundColor( 
+						TextColor.ANSI.BLUE );
+				map.get( 10 ).get( i ).setBackgroundColor( 
+						TextColor.ANSI.RED );
 			}
 			
 			//XXX Main Loop
@@ -123,7 +128,6 @@ public class Main {
 							//Draw map
 						if ( 	indY < maxIndices.getY() && 
 								indX < maxIndices.getX() ) {
-							
 							screen.setCharacter( 
 									x , 
 									y ,  
@@ -133,7 +137,7 @@ public class Main {
 											map.get( indY ).get( indX )
 												.getForegroundColor() ,
 											map.get( indY ).get( indX )
-											.getBackgroundColor() ) ) ;
+												.getBackgroundColor() ) ) ;
 							
 						}
 						
@@ -197,7 +201,7 @@ public class Main {
 			ScreenFunctions.stopScreen( screen ) ;
 		}
 		catch ( Exception e ) {
-			Debug.logErr( "Main: catch" , e ) ;
+			Debug.logErr( "Main : catch" , e ) ;
 		}
 		finally{
 			Debug.logln( "[Game] : [End]" ) ;
@@ -213,7 +217,7 @@ public class Main {
 			Debug.logln( "properties : " + properties.toString() , debug ) ;
 		}
 		catch ( Exception e ) {
-			Debug.logErr( "Main: initProperties" , e ) ;
+			Debug.logErr( "Main : initProperties" , e ) ;
 		}
 		
 		artifactId = properties.getProperty( "artifactId" ) ;
