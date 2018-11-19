@@ -54,8 +54,6 @@ public class Camera {
 	}
 	
 	public void setIndices( ArrayList<ArrayList<AbstractTile>> map ) {
-		//FIXME : minIndices.Y still not behaving correctly
-		
 		minIndices = new Vector2() ;
 		maxIndices = new Vector2() ;
 		
@@ -93,8 +91,8 @@ public class Camera {
 		if( minIndices.getX() > map.get( 0 ).size() - dimensions.getX() + 5 ) {
 			minIndices.setX( map.get( 0 ).size() - dimensions.getX() + 5 ) ;
 		}
-		if( minIndices.getY() > map.size() + dimensions.getY() + 5 ) {
-			minIndices.setY( map.size() + dimensions.getY() + 5 ) ;
+		if( minIndices.getY() > map.size() - dimensions.getY() - 1 ) {
+			minIndices.setY( map.size() - dimensions.getY() - 1 ) ;
 		}
 		
 		if( maxIndices.getX() < dimensions.getX() ) {
