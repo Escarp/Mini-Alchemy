@@ -1,9 +1,13 @@
 package model.tile;
 
+import com.googlecode.lanterna.TextColor;
+
 public class AbstractTile {
 	protected boolean passable ;
 	protected boolean walkable ;
 	protected char character ;
+	protected TextColor foregroundColor ;
+	protected TextColor backgroundColor ;
 	
 	//Getters
 	public boolean isPassable() {
@@ -15,6 +19,13 @@ public class AbstractTile {
 	public char getCharacter() {
 		return character;
 	}
+	public TextColor getForegroundColor() {
+		return foregroundColor;
+	}
+
+	public TextColor getBackgroundColor() {
+		return backgroundColor;
+	}
 	
 	//Setters
 	public void setPassable(boolean passable) {
@@ -25,6 +36,13 @@ public class AbstractTile {
 	}
 	public void setCharacter(char character) {
 		this.character = character;
+	}
+	public void setForegroundColor(TextColor foregroundColor) {
+		this.foregroundColor = foregroundColor;
+	}
+
+	public void setBackgroundColor(TextColor backgroundColor) {
+		this.backgroundColor = backgroundColor;
 	}
 	
 }

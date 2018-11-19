@@ -65,21 +65,21 @@ public class Main {
 				Screen screen = new TerminalScreen( terminal ) ) {
 			
 			TerminalSize Tsize = screen.getTerminalSize() ;
-			
 			int rows = Tsize.getRows() ;
 			int cols = Tsize.getColumns() ;
+			Debug.logln( "terminalSize: " + Tsize.toString() , debug ) ;
 			
 			player.setPosition( new Vector2( 5 , 5 ) ) ;
 			
 			//Initialize camera
 			Camera camera = new Camera( 
-					new Vector2( cols - ( cols / 5 ) , rows / 2 )  , 
-					player.getPosition() ) ;
+					new Vector2( 
+							(int)( cols - ( cols / 5 ) ) , 
+							(int)( rows / 2 ) )  , 
+					new Vector2() ) ;
 			
 			//Initialize screen
 			ScreenFunctions.initScreen( screen ) ;
-			
-			Debug.logln( "terminalSize: " + Tsize.toString() , debug ) ;
 			
 			//Init Map
 			initMap( map , 100 , 100 ) ;
@@ -129,7 +129,11 @@ public class Main {
 									y ,  
 									new TextCharacter( 
 											map.get( indY ).get( indX )
-											.getCharacter() ) ) ;
+												.getCharacter() ,
+											map.get( indY ).get( indX )
+												.getForegroundColor() ,
+											map.get( indY ).get( indX )
+											.getBackgroundColor() ) ) ;
 							
 						}
 						
@@ -144,11 +148,15 @@ public class Main {
 											x , 
 											y ,  
 											new TextCharacter( 
-													entity.getCharacter() ) ) ;
+													entity.getCharacter() ,
+													entity
+														.getForegroundColor() ,
+													entity
+														.getBackgroundColor() ) 
+											) ;
 								}
 							}
 						}
-						
 						indX++ ;
 					}
 					indY++ ;

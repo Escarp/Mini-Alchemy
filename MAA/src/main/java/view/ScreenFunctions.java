@@ -2,8 +2,6 @@ package view;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
-
 import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.TextCharacter;
 import com.googlecode.lanterna.screen.Screen;
@@ -12,7 +10,6 @@ import com.googlecode.lanterna.terminal.Terminal;
 import com.googlecode.lanterna.terminal.swing.TerminalEmulatorColorConfiguration;
 import com.googlecode.lanterna.terminal.swing.TerminalEmulatorPalette;
 
-import model.entity.AbstractEntity;
 import model.tile.AbstractTile;
 
 public class ScreenFunctions {
@@ -49,14 +46,6 @@ public class ScreenFunctions {
 				TerminalEmulatorPalette.GNOME_TERMINAL ) )
 		.setInitialTerminalSize( new TerminalSize( width , height ) )
 		.createTerminal() ;
-	}
-	
-	public static void drawEntities( 
-			Screen screen , 
-			List<AbstractEntity> entities ) throws IOException{
-		for( AbstractEntity entity : entities ) {
-			entity.drawSelf( screen ) ;
-		}
 	}
 
 	public static void drawMap( 

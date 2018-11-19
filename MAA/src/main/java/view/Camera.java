@@ -54,6 +54,8 @@ public class Camera {
 	}
 	
 	public void setIndices( ArrayList<ArrayList<AbstractTile>> map ) {
+		//FIXME : find a way to remove the +5 and the -1 or to have them dynamic
+		
 		minIndices = new Vector2() ;
 		maxIndices = new Vector2() ;
 		

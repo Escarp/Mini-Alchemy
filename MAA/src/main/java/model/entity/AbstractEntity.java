@@ -1,11 +1,8 @@
 package model.entity;
 
 import java.util.ArrayList;
-import com.googlecode.lanterna.TextCharacter;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.input.KeyStroke;
-import com.googlecode.lanterna.screen.Screen;
-
 import model.tile.AbstractTile;
 import util.physics.Vector2;
 
@@ -143,15 +140,4 @@ public abstract class AbstractEntity {
 	}
 	
 	public abstract void update() ;
-	
-	public void drawSelf( Screen screen ) {
-		screen.setCharacter( 
-				(int)position.getX() , 
-				(int)position.getY() , 
-				new TextCharacter( 
-				character , 
-				foregroundColor , 
-				backgroundColor ) 
-				) ;
-	}
 }
