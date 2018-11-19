@@ -5,7 +5,6 @@ import java.util.List;
 
 import model.entity.AbstractEntity;
 import model.tile.AbstractTile;
-import util.physics.Vector2d;
 import util.physics.Vector2i;
 
 public class Camera {
@@ -92,8 +91,8 @@ public class Camera {
 		if( minIndices.getX() > map.get( 0 ).size() - dimensions.getX() ) {
 			minIndices.setX( map.get( 0 ).size() - dimensions.getX() ) ;
 		}
-		if( minIndices.getY() > map.size() - dimensions.getY() - 1 ) {
-			minIndices.setY( map.size() - dimensions.getY() - 1 ) ;
+		if( minIndices.getY() > map.size() - dimensions.getY() ) {
+			minIndices.setY( map.size() - dimensions.getY() ) ;
 		}
 		
 		if( maxIndices.getX() < dimensions.getX() ) {
