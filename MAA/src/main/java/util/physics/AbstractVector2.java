@@ -1,7 +1,5 @@
 package util.physics;
 
-import com.sun.javafx.collections.MappingChange.Map;
-
 public class AbstractVector2<T> {
 	protected T x ;
 	protected T y ;

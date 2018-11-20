@@ -1,10 +1,14 @@
 package view;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import model.entity.AbstractEntity;
+import model.entity.Player;
 import model.tile.AbstractTile;
+import util.KeySet;
 import util.physics.Vector2i;
 
 public class Camera {
@@ -12,8 +16,13 @@ public class Camera {
 	private Vector2i position ;
 	private Vector2i minIndices ;
 	private Vector2i maxIndices ;
+	private Map<KeySet , Boolean> lightMap ;
 	
 	//Getters
+	public Map<KeySet , Boolean> getLighMap(){
+		return lightMap ;
+	}
+	
 	public Vector2i getDimensions() {
 		return dimensions;
 	}
@@ -31,6 +40,10 @@ public class Camera {
 	}
 
 	//Setters
+	public void setLightMap( Map<KeySet , Boolean> lightMap ){
+		this.lightMap = lightMap ;
+	}
+	
 	public void setDimensions(Vector2i dimensions) {
 		this.dimensions = dimensions;
 	}
@@ -113,5 +126,133 @@ public class Camera {
 				entity.setVisible( true ) ;
 			}
 		}
+	}
+	
+	public Map<KeySet , Boolean> createLightMap( 
+			Player player , ArrayList<ArrayList<AbstractTile>> map ){
+		lightMap = new HashMap<>() ;
+		for( int i = -1 ; i <= 1 ; i++ ){
+			for( int j = -1 ; j <= 1 ;j++ ){
+				lightMap.putAll( recursiveFOV( 
+						new Vector2i(
+								player.getPosition().getX().intValue() , 
+								player.getPosition().getY().intValue() ) , 
+						new Vector2i( j , i ) , 
+						player.getViewRadius() , 
+						map ) ) ;
+			}
+		}
+		return lightMap ;
+	}
+	
+	private Map<KeySet , Boolean> recursiveFOV( 
+			Vector2i start , 
+			Vector2i direction , 
+			int strenght , 
+			ArrayList<ArrayList<AbstractTile>> map ){
+		Map<KeySet , Boolean> lightMap = new HashMap<KeySet , Boolean>() ;
+		if( strenght <= 0 ){
+			lightMap.put( new KeySet( start.getX() , start.getY() ) , true ) ;
+			return lightMap ;
+		}
+		else{
+			if( 	( start.getX() >= 0 && start.getX() < map.get(0).size() ) && 
+					( start.getY() >= 0 && start.getY() < map.size() ) ){
+				if( map.get( start.getY() ).get( start.getX() ).isPassable() ){
+					//this direction
+					lightMap.putAll( recursiveFOV( 
+							new Vector2i( 
+								start.getX() + direction.getX() , 
+								start.getY() + direction.getY() ) , 
+							direction , 
+							strenght - 1 , 
+							map ) ) ;
+					
+					//switch direction
+					
+					//if up
+					if( direction.getY() < 0 ){
+						//if right
+						if( direction.getX() > 0 ){
+							lightMap.putAll( recursiveFOV( 
+									new Vector2i( 
+											start.getX() , start.getY() - 1 ) , 
+									direction , 
+									strenght - 1 , 
+									map ) ) ;
+						}
+						//else if left
+						else if( direction.getX() < 0 ){
+							lightMap.putAll( recursiveFOV( 
+									new Vector2i( 
+											start.getX() - 1 , start.getY() ) , 
+									direction , 
+									strenght - 1 , 
+									map ) ) ;
+						}
+						else{
+							lightMap.putAll( recursiveFOV( 
+									new Vector2i( 
+											start.getX() - 1 , 
+											start.getY() - 1 ) , 
+									direction , 
+									strenght - 1 , 
+									map ) ) ;
+						}
+					}
+					//else if down
+					else if( direction.getY() > 0 ){
+						//if right
+						if( direction.getX() > 0 ){
+							lightMap.putAll( recursiveFOV( 
+									new Vector2i( 
+											start.getX() + 1 , start.getY() ) , 
+									direction , 
+									strenght - 1 , 
+									map ) ) ;
+						}
+						//else if left
+						else if( direction.getX() < 0 ){
+							lightMap.putAll( recursiveFOV( 
+									new Vector2i( 
+											start.getX() , start.getY() + 1 ) , 
+									direction , 
+									strenght - 1 , 
+									map ) ) ;
+						}
+						else{
+							lightMap.putAll( recursiveFOV( 
+									new Vector2i( 
+											start.getX() + 1 , 
+											start.getY() + 1 ) , 
+									direction , 
+									strenght - 1 , 
+									map ) ) ;
+						}
+					}	
+					//else if right
+					else if( direction.getX() > 0 ){
+						lightMap.putAll( recursiveFOV( 
+								new Vector2i( 
+										start.getX() + 1 , start.getY() - 1 ) , 
+								direction , 
+								strenght - 1 , 
+								map ) ) ;
+					}
+					//else if left
+					else if( direction.getX() < 0 ){
+						lightMap.putAll( recursiveFOV( 
+								new Vector2i( 
+										start.getX() - 1 , start.getY() + 1 ) , 
+								direction , 
+								strenght - 1 , 
+								map ) ) ;
+					}
+				}
+				lightMap.put( 
+						new KeySet( start.getX() , start.getY() ) , true ) ;
+			}
+		}
+		return lightMap ;
 	}
 }

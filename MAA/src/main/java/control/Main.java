@@ -1,6 +1,7 @@
 package control;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 
@@ -18,6 +19,7 @@ import model.entity.AbstractEntity;
 import model.entity.Player;
 import model.tile.AbstractTile;
 import util.ButtonUtils;
+import util.KeySet;
 import util.physics.AbstractVector2;
 import util.physics.Vector2d;
 import util.physics.Vector2i;
@@ -54,7 +56,7 @@ public class Main {
 			//Adding player
 		entities.add( producer.getFactory( "Entity" ).getEntity( "Player" ) ) ;
 		Player player = (Player)entities.get( 0 ) ;
-		player.setViewRadius( 5 );
+		player.setViewRadius( 6 );
 		
 		Debug.logln( "initEntities : initialized " + entities.size() + 
 				" entities" , debug ) ;
@@ -74,7 +76,7 @@ public class Main {
 			int cols = Tsize.getColumns() ;
 			Debug.logln( "terminalSize: " + Tsize.toString() , debug ) ;
 			
-			player.setPosition( new Vector2d( 5d , 5d ) ) ;
+			player.setPosition( new Vector2d( 100d / 2 , 100d / 2 ) ) ;
 			
 			//Initialize camera
 			Camera camera = new Camera( 
@@ -91,11 +93,11 @@ public class Main {
 			
 			for( int i = 5 ; i < 15 ; i++ ){
 				map.get( 10 ).get( i ).setWalkable( false ) ;
-				map.get( 10 ).get( i ).setCharacter( '!' );
+				map.get( 10 ).get( i ).setCharacter( (char) 126 );
 				map.get( 10 ).get( i ).setForegroundColor( 
-						TextColor.ANSI.BLUE );
-				map.get( 10 ).get( i ).setBackgroundColor( 
 						TextColor.ANSI.RED );
+				map.get( 10 ).get( i ).setBackgroundColor( 
+						TextColor.ANSI.BLACK );
 			}
 			
 			for( int i = 20 ; i < 45 ; i++ ){
@@ -115,6 +117,11 @@ public class Main {
 								( camera.getDimensions().getY() / 2 ) ) ) ) ;
 				
 				camera.setIndices( map ) ;
+				
+				camera.createLightMap( player , map ) ;
+				
+				HashMap<KeySet , Boolean> lightMap = 
+						(HashMap<KeySet, Boolean>) camera.getLighMap() ;
 				
 				camera.setVisibleEntities( entities ) ;
 				
@@ -141,8 +148,13 @@ public class Main {
 									player.getPosition() , 
 									new Vector2d( 
 											(double)indX , 
-											(double)indY ) ) < 
-									(double)player.getViewRadius() ){
+											(double)indY ) ) <
+								player.getViewRadius() && 
+								( lightMap.get( 
+										new KeySet( indX , indY ) ) != null &&
+								lightMap.get( 
+										new KeySet( indX , indY ) )
+										.booleanValue() ) ){
 								map.get( indY ).get( indX )
 								.setDiscovered( true ) ;
 								screen.setCharacter( 
