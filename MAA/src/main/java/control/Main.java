@@ -1,12 +1,8 @@
 package control;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Properties;
 
-import com.googlecode.lanterna.TerminalSize;
-import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.screen.Screen;
@@ -14,11 +10,9 @@ import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.Terminal;
 
 import model.FactoryProducer;
-import model.entity.AbstractEntity;
 import model.entity.Player;
-import model.tile.AbstractTile;
+import model.world.AbstractLevel;
 import util.ButtonUtils;
-import util.KeySet;
 import util.physics.Vector2d;
 import util.physics.Vector2i;
 import view.Camera;
@@ -44,108 +38,78 @@ public class Main {
 			debug = Boolean.valueOf( args[ 0 ] ) ;
 		}
 		
+		//Initialize map and entities
+		ArrayList<AbstractLevel> levels = new ArrayList<AbstractLevel>() ;
+		levels.add( producer.getFactory( "level" ).getLevel( "standard" ) ) ;
+		levels.get( 0 ).generateEmptyMap( 100 , 100 ) ;
+		levels.get( 0 ).initEntities() ;
+		
 		//Initialize properties
 		initProperties() ;
 		
-		//Initialize entities
-		//TODO : move to level class
-		Debug.logln( "initEntities : [Start]" , debug ) ;
-		List<AbstractEntity> entities = new ArrayList<>() ;
-		
-			//Adding player
-			//not this though
-		entities.add( producer.getFactory( "Entity" ).getEntity( "Player" ) ) ;
-		Player player = (Player)entities.get( 0 ) ;
-		player.setViewRadius( 10 );
-		
-		Debug.logln( "initEntities : initialized " + entities.size() + 
-				" entities" , debug ) ;
-		Debug.logln( "initEntities : [End]" , debug ) ;
-		
-		ArrayList<ArrayList<AbstractTile>> map = 
-				new ArrayList<ArrayList<AbstractTile>>() ;
+		//Initialize Player
+		Player player = (Player) levels.get( 0 ).getEntities().get( 0 ) ;
+		player.setViewRadius( 6 ) ;
+		player.setPosition( new Vector2d( 100d / 2 , 100d / 2 ) ) ;
 		
 		try( 	Terminal terminal = ScreenFunctions.startTerminal( 
 						name , 
 						screenWidth , 
 						screenHeight );
 				Screen screen = new TerminalScreen( terminal ) ) {
-			
-			TerminalSize Tsize = screen.getTerminalSize() ;
-			int rows = Tsize.getRows() ;
-			int cols = Tsize.getColumns() ;
-			Debug.logln( "terminalSize: " + Tsize.toString() , debug ) ;
-			
-			player.setPosition( new Vector2d( 100d / 2 , 100d / 2 ) ) ;
-			
 			//Initialize camera
 			Camera camera = new Camera( 
 					new Vector2i( 
-							cols - ( cols / 5 ) , 
-							rows / 2 ) , 
+							screenWidth - ( screenWidth / 5 ) , 
+							screenHeight / 2 ) , 
 					new Vector2i() ) ;
-			
 			//Initialize screen
 			ScreenFunctions.initScreen( screen ) ;
-			
-			//Initialize Map
-			initMap( map , 100 , 100 ) ;
 			
 			//XXX Main Loop
 			while( running ) {
 				//XXX Processing stuff
-				
 				camera.setPosition( new Vector2i( 
 						(int)( player.getPosition().getX() - 
 								( camera.getDimensions().getX() / 2 ) ) , 
 						(int)( player.getPosition().getY() - 
 								( camera.getDimensions().getY() / 2 ) ) ) ) ;
-				
-				camera.setIndices( map ) ;
-				
-				camera.createLightMap( player , map ) ;
-				
-				HashMap<KeySet , Boolean> lightMap = 
-						(HashMap<KeySet, Boolean>) camera.getLighMap() ;
-				
-				camera.setVisibleEntities( entities ) ;
+				camera.setIndices( levels.get( 0 ).getMap() ) ;
+				camera.createLightMap( player , levels.get( 0 ).getMap() ) ;
+				camera.setVisibleEntities( levels.get( 0 ).getEntities() ) ;
 				
 				Vector2i minIndices = camera.getMinIndices() ;
 				Vector2i maxIndices = camera.getMaxIndices() ;
+				int indX = minIndices.getX() ;
+				int indY = minIndices.getY() ;
 				
 				//XXX Graphical stuff
-				
 					//Wipe screen DO NOT MOVE-this needs to be BEFORE drawing
 				ScreenFunctions.wipeScreen( screen ) ;	
 				
-				int indX = (int)minIndices.getX() ;
-				int indY = (int)minIndices.getY() ;
-				
-				for( int y = rows / 4 ; y < rows - ( rows / 4 ) ; y++ ) {
-					indX = (int)minIndices.getX() ;
-					for( int x = 0 ; x < cols - ( cols / 5 ) ; x++ ) {
+				for( 	int y = screenHeight / 4 ; 
+						y < screenHeight - ( screenHeight / 4 ) ; 
+						y++ ) {
+					indX = minIndices.getX() ;
+					for( 	int x = 0 ; 
+							x < screenWidth - ( screenWidth / 5 ) ; 
+							x++ ) {
 						//Draw what the camera can see
-						
 							//Draw map
 						ScreenFunctions.drawMap( 
 								screen , x , y , 
-								lightMap , maxIndices , minIndices , map , 
+								camera.getLighMap() , maxIndices , minIndices , 
+								levels.get( 0 ).getMap() , 
 								indX , indY , player ) ;
-						
 							//TODO : Draw items on floor
-						
 							//Draw entities
 						ScreenFunctions.drawEntities( screen , x , y , 
-								entities , indX , indY ) ;
-						
+								levels.get( 0 ).getEntities() , indX , indY ) ;
 						indX++ ;
-						
 							//TODO : Draw GUI
-						
 					}
 					indY++ ;
 				}
-				
 					//Refresh screen DO NOT MOVE-this needs to be AFTER drawing
 				ScreenFunctions.refreshScreen( screen ) ;
 				
@@ -163,20 +127,16 @@ public class Main {
 						doRepeat = false ;
 						break ;
 					}
-					
 						//Player movement
 					Vector2d oldPos = new Vector2d( 
 							player.getPosition().getX() , 
 							player.getPosition().getY() ) ;
-					player.move( input , map ) ;
+					player.move( input , levels.get( 0 ).getMap() ) ;
 					if( oldPos.equals( player.getPosition() ) ){
 						doRepeat = true ;
 					}
-					
 				}while( doRepeat ) ;
-				
 			}
-			
 			//End screen
 			ScreenFunctions.stopScreen( screen ) ;
 		}
@@ -209,52 +169,5 @@ public class Main {
 				"screenHeight" ) ) ;
 		
 		Debug.logln( "initProperties : [End]" , debug ) ;
-	}
-	
-	private static void initMap( 
-			//FIXME : to be removed
-			ArrayList<ArrayList<AbstractTile>> map , 
-			int rows, 
-			int cols) {
-		Debug.logln( "initMap : [Start]" , debug ) ;
-		for( int y = 0 ; y < rows ; y++ ){
-			map.add( new ArrayList<AbstractTile>() ) ;
-			for( int x = 0 ; x < cols ; x++ ){
-				if( x == 0 || x == cols - 1 ){
-					map.get( y ).add( producer.getFactory( "TILE" )
-							.getTile( "WALL" ) ) ;
-				}
-				else if( y == 0 || y == rows - 1 ){
-					map.get( y ).add( producer.getFactory( "TILE" )
-							.getTile( "WALL" ) ) ;
-				}
-				else
-				{
-					map.get( y ).add( producer.getFactory( "TILE" )
-							.getTile( "FLOOR" ) ) ;
-				}
-			}
-		}
-		
-		for( int i = 5 ; i < 15 ; i++ ){
-			map.get( 10 ).get( i ).setWalkable( false ) ;
-			map.get( 10 ).get( i ).setCharacter( (char) 126 );
-			map.get( 10 ).get( i ).setForegroundColor( 
-					TextColor.ANSI.RED );
-			map.get( 10 ).get( i ).setBackgroundColor( 
-					TextColor.ANSI.BLACK );
-		}
-		
-		for( int i = 20 ; i < 45 ; i++ ){
-			map.get( 10 ).set( i, producer.getFactory( "TILE" )
-					.getTile( "WALL" ) ) ;
-		}
-		
-		map.get( 20 ).set( 20 , producer.getFactory( "TILE" )
-				.getTile( "WALL" ) ) ;
-		
-		Debug.logln( "initMap : initialized " + 
-				map.size() * map.get( 0 ).size() + " tiles" , debug ) ;
-		Debug.logln( "initMap : [End]" , debug ) ;
 	}
 }

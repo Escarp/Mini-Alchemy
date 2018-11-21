@@ -3,6 +3,7 @@ package model.factory;
 import model.entity.AbstractEntity;
 import model.entity.Player;
 import model.tile.AbstractTile;
+import model.world.AbstractLevel;
 
 public class FactoryEntity extends AbstractFactory {
 
@@ -17,6 +18,11 @@ public class FactoryEntity extends AbstractFactory {
 
 	@Override
 	public AbstractTile getTile(String tile) {
+		return null;
+	}
+
+	@Override
+	public AbstractLevel getLevel(String level) {
 		return null;
 	}
 

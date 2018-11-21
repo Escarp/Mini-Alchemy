@@ -2,11 +2,10 @@ package model.factory;
 
 import model.entity.AbstractEntity;
 import model.tile.AbstractTile;
-import model.tile.Floor;
-import model.tile.Wall;
 import model.world.AbstractLevel;
+import model.world.StandardLevel;
 
-public class FactoryTile extends AbstractFactory {
+public class FactoryLevel extends AbstractFactory {
 
 	@Override
 	public AbstractEntity getEntity(String entity) {
@@ -15,17 +14,14 @@ public class FactoryTile extends AbstractFactory {
 
 	@Override
 	public AbstractTile getTile(String tile) {
-		if( tile.equalsIgnoreCase( "WALL" ) ){
-			return new Wall() ;
-		}
-		if( tile.equalsIgnoreCase( "FLOOR" ) ){
-			return new Floor() ;
-		}
 		return null;
 	}
 
 	@Override
 	public AbstractLevel getLevel(String level) {
+		if( level.equalsIgnoreCase( "STANDARD" ) ){
+			return new StandardLevel() ;
+		}
 		return null;
 	}
 

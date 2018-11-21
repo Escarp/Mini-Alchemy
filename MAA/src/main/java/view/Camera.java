@@ -2,8 +2,6 @@ package view;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import model.entity.AbstractEntity;
 import model.entity.Player;
@@ -17,10 +15,10 @@ public class Camera {
 	private Vector2i position ;
 	private Vector2i minIndices ;
 	private Vector2i maxIndices ;
-	private Map<KeySet , Boolean> lightMap ;
+	private HashMap<KeySet , Boolean> lightMap ;
 	
 	//Getters
-	public Map<KeySet , Boolean> getLighMap(){
+	public HashMap<KeySet , Boolean> getLighMap(){
 		return lightMap ;
 	}
 	
@@ -41,7 +39,7 @@ public class Camera {
 	}
 
 	//Setters
-	public void setLightMap( Map<KeySet , Boolean> lightMap ){
+	public void setLightMap( HashMap<KeySet , Boolean> lightMap ){
 		this.lightMap = lightMap ;
 	}
 	
@@ -118,7 +116,7 @@ public class Camera {
 		}
 	}
 	
-	public void setVisibleEntities( List<AbstractEntity> entities ) {
+	public void setVisibleEntities( ArrayList<AbstractEntity> entities ) {
 		for( AbstractEntity entity : entities ) {
 			if( 	( entity.getPosition().getY() > minIndices.getY() &&
 					entity.getPosition().getY() < maxIndices.getY() ) &&
@@ -136,7 +134,7 @@ public class Camera {
 		}
 	}
 	
-	public Map<KeySet , Boolean> createLightMap( 
+	public HashMap<KeySet , Boolean> createLightMap( 
 			Player player , ArrayList<ArrayList<AbstractTile>> map ){
 		lightMap = new HashMap<>() ;
 		for( int i = -1 ; i <= 1 ; i++ ){
@@ -153,12 +151,12 @@ public class Camera {
 		return lightMap ;
 	}
 
-	private Map<KeySet , Boolean> recursiveFOV( 
+	private HashMap<KeySet , Boolean> recursiveFOV( 
 			Vector2i start , 
 			Vector2i direction , 
 			int strenght , 
 			ArrayList<ArrayList<AbstractTile>> map ){
-		Map<KeySet , Boolean> lightMap = new HashMap<KeySet , Boolean>() ;
+		HashMap<KeySet , Boolean> lightMap = new HashMap<KeySet , Boolean>() ;
 		if( strenght <= 0 ){
 			lightMap.put( new KeySet( start.getX() , start.getY() ) , true ) ;
 			return lightMap ;
