@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Properties;
 
 import com.googlecode.lanterna.TerminalSize;
-import com.googlecode.lanterna.TextCharacter;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
@@ -20,7 +19,6 @@ import model.entity.Player;
 import model.tile.AbstractTile;
 import util.ButtonUtils;
 import util.KeySet;
-import util.physics.AbstractVector2;
 import util.physics.Vector2d;
 import util.physics.Vector2i;
 import view.Camera;
@@ -28,14 +26,14 @@ import view.Debug;
 import view.ScreenFunctions;
 
 public class Main {
-	public static Properties properties = null ;
-	public static String artifactId = "" ;
-	public static String version = "" ;
-	public static String name = "" ;
-	public static int screenWidth = 80 ;
-	public static int screenHeight = 24 ;
-	public static boolean debug = false ;
-	public static FactoryProducer producer = new FactoryProducer() ;
+	public static Properties properties		= null ;
+	public static String artifactId			= "" ;
+	public static String version			= "" ;
+	public static String name				= "" ;
+	public static int screenWidth			= 80 ;
+	public static int screenHeight			= 24 ;
+	public static boolean debug				= false ;
+	public static FactoryProducer producer	= new FactoryProducer() ;
 	
 	public static void main( String[] args ) {
 		Debug.logln( "[Game] : [Start]" ) ;
@@ -50,10 +48,12 @@ public class Main {
 		initProperties() ;
 		
 		//Initialize entities
+		//TODO : move to level class
 		Debug.logln( "initEntities : [Start]" , debug ) ;
 		List<AbstractEntity> entities = new ArrayList<>() ;
 		
 			//Adding player
+			//not this tho
 		entities.add( producer.getFactory( "Entity" ).getEntity( "Player" ) ) ;
 		Player player = (Player)entities.get( 0 ) ;
 		player.setViewRadius( 6 );
@@ -91,25 +91,10 @@ public class Main {
 			//Init Map
 			initMap( map , 100 , 100 ) ;
 			
-			for( int i = 5 ; i < 15 ; i++ ){
-				map.get( 10 ).get( i ).setWalkable( false ) ;
-				map.get( 10 ).get( i ).setCharacter( (char) 126 );
-				map.get( 10 ).get( i ).setForegroundColor( 
-						TextColor.ANSI.RED );
-				map.get( 10 ).get( i ).setBackgroundColor( 
-						TextColor.ANSI.BLACK );
-			}
-			
-			for( int i = 20 ; i < 45 ; i++ ){
-				map.get( 10 ).set( i, producer.getFactory( "TILE" )
-						.getTile( "WALL" ) ) ;
-			}
-			
 			//XXX Main Loop
 			while( running ) {
 				//XXX Processing stuff
 				
-				//camera.setCenter( player.getPosition() ) ;
 				camera.setPosition( new Vector2i( 
 						(int)( player.getPosition().getX() - 
 								( camera.getDimensions().getX() / 2 ) ) , 
@@ -142,69 +127,21 @@ public class Main {
 						//Draw what the camera can see
 						
 							//Draw map
-						if ( 	indY < maxIndices.getY() && 
-								indX < maxIndices.getX() ) {
-							if( AbstractVector2.distance( 
-									player.getPosition() , 
-									new Vector2d( 
-											(double)indX , 
-											(double)indY ) ) <
-								player.getViewRadius() && 
-								( lightMap.get( 
-										new KeySet( indX , indY ) ) != null &&
-								lightMap.get( 
-										new KeySet( indX , indY ) )
-										.booleanValue() ) ){
-								map.get( indY ).get( indX )
-								.setDiscovered( true ) ;
-								screen.setCharacter( 
-										x , 
-										y ,  
-										new TextCharacter( 
-												map.get( indY ).get( indX )
-													.getCharacter() ,
-												map.get( indY ).get( indX )
-													.getForegroundColor() ,
-												map.get( indY ).get( indX )
-													.getBackgroundColor() ) ) ;
-							}
-							else{
-								if( map.get( indY ).get( indX )
-										.isDiscovered() ){
-									screen.setCharacter( 
-											x , 
-											y ,  
-											new TextCharacter( 
-													map.get( indY ).get( indX )
-														.getCharacter() ,
-													TextColor.ANSI.WHITE ,
-													TextColor.ANSI.BLACK ) ) ;
-								}
-							}
-							
-						}
+						ScreenFunctions.drawMap( 
+								screen , x , y , 
+								lightMap , maxIndices , minIndices , map , 
+								indX , indY , player ) ;
 						
-							//TODO: Draw items on floor
+							//TODO : Draw items on floor
 						
 							//Draw entities
-						for( AbstractEntity entity : entities ) {
-							if( entity.isVisible() ) {
-								if( 	entity.getPosition().getX() == indX &&
-										entity.getPosition().getY() == indY ) {
-									screen.setCharacter( 
-											x , 
-											y ,  
-											new TextCharacter( 
-													entity.getCharacter() ,
-													entity
-														.getForegroundColor() ,
-													entity
-														.getBackgroundColor() ) 
-											) ;
-								}
-							}
-						}
+						ScreenFunctions.drawEntities( screen , x , y , 
+								entities , indX , indY ) ;
+						
 						indX++ ;
+						
+							//TODO : Draw GUI
+						
 					}
 					indY++ ;
 				}
@@ -257,7 +194,7 @@ public class Main {
 		try {
 			properties.load( Main.class.getClassLoader().getResourceAsStream( 
 					"project.properties" ) ) ;
-			Debug.logln( "properties : " + properties.toString() , debug ) ;
+			Debug.logln( "initproperties : " + properties.toString() , debug ) ;
 		}
 		catch ( Exception e ) {
 			Debug.logErr( "Main : initProperties" , e ) ;
@@ -275,6 +212,7 @@ public class Main {
 	}
 	
 	private static void initMap( 
+			//FIXME : to be removed
 			ArrayList<ArrayList<AbstractTile>> map , 
 			int rows, 
 			int cols) {
@@ -297,6 +235,24 @@ public class Main {
 				}
 			}
 		}
+		
+		for( int i = 5 ; i < 15 ; i++ ){
+			map.get( 10 ).get( i ).setWalkable( false ) ;
+			map.get( 10 ).get( i ).setCharacter( (char) 126 );
+			map.get( 10 ).get( i ).setForegroundColor( 
+					TextColor.ANSI.RED );
+			map.get( 10 ).get( i ).setBackgroundColor( 
+					TextColor.ANSI.BLACK );
+		}
+		
+		for( int i = 20 ; i < 45 ; i++ ){
+			map.get( 10 ).set( i, producer.getFactory( "TILE" )
+					.getTile( "WALL" ) ) ;
+		}
+		
+		map.get( 20 ).set( 20 , producer.getFactory( "TILE" )
+				.getTile( "WALL" ) ) ;
+		
 		Debug.logln( "initMap : initialized " + 
 				map.size() * map.get( 0 ).size() + " tiles" , debug ) ;
 		Debug.logln( "initMap : [End]" , debug ) ;

@@ -51,6 +51,22 @@ public class Vector2i extends AbstractVector2<Integer> {
 		}
 	}
 	
+	public static Vector2i add( Vector2i vec1 , Vector2i vec2 ) {
+		Vector2i result = new Vector2i() ;
+		
+		result.x = (int) (vec1.x + vec2.x) ;
+		result.y = (int) (vec1.y + vec2.y) ;
+		
+		result.value = (int)Math.sqrt( 
+				( result.x * result.x ) + 
+				( result.y * result.y ) ) ;
+		if( result.x != 0 ) {
+			result.magnitude = (int)Math.tanh( result.y / result.x ) ;
+		}
+		
+		return result ;
+	}
+	
 	public static Vector2i add( Vector2d vec1 , Vector2i vec2 ) {
 		Vector2i result = new Vector2i() ;
 		

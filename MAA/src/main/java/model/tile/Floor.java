@@ -33,6 +33,6 @@ public class Floor extends AbstractTile {
 				true ,
 				false ,
 				TextColor.ANSI.YELLOW , 
-				TextColor.ANSI.BLACK ) ;
+				TextColor.ANSI.YELLOW ) ;
 	}
 }
