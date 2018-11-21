@@ -53,10 +53,10 @@ public class Main {
 		List<AbstractEntity> entities = new ArrayList<>() ;
 		
 			//Adding player
-			//not this tho
+			//not this though
 		entities.add( producer.getFactory( "Entity" ).getEntity( "Player" ) ) ;
 		Player player = (Player)entities.get( 0 ) ;
-		player.setViewRadius( 6 );
+		player.setViewRadius( 10 );
 		
 		Debug.logln( "initEntities : initialized " + entities.size() + 
 				" entities" , debug ) ;
@@ -88,7 +88,7 @@ public class Main {
 			//Initialize screen
 			ScreenFunctions.initScreen( screen ) ;
 			
-			//Init Map
+			//Initialize Map
 			initMap( map , 100 , 100 ) ;
 			
 			//XXX Main Loop
