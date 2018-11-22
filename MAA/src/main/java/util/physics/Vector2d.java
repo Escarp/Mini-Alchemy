@@ -48,6 +48,10 @@ public class Vector2d extends AbstractVector2<Double> {
 		this.magnitude = Math.tanh( this.y / this.x ) ;
 	}
 	
+	public Vector2i toVector2i(){
+		return new Vector2i( x.intValue() , y.intValue() ) ;
+	}
+	
 	public static Vector2d add( Vector2d vec1 , Vector2d vec2 ) {
 		Vector2d result = new Vector2d() ;
 		

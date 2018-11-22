@@ -41,7 +41,7 @@ public class Main {
 		//Initialize map and entities
 		ArrayList<AbstractLevel> levels = new ArrayList<AbstractLevel>() ;
 		levels.add( producer.getFactory( "level" ).getLevel( "standard" ) ) ;
-		levels.get( 0 ).generateEmptyMap( 100 , 100 ) ;
+		levels.get( 0 ).generateEmptyMap( 200 , 200 ) ;
 		levels.get( 0 ).initEntities() ;
 		
 		//Initialize properties
@@ -49,7 +49,7 @@ public class Main {
 		
 		//Initialize Player
 		Player player = (Player) levels.get( 0 ).getEntities().get( 0 ) ;
-		player.setViewRadius( 6 ) ;
+		player.setViewRadius( 8 ) ;
 		player.setPosition( new Vector2d( 100d / 2 , 100d / 2 ) ) ;
 		
 		try( 	Terminal terminal = ScreenFunctions.startTerminal( 

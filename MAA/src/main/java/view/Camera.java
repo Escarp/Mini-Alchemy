@@ -7,7 +7,8 @@ import model.entity.AbstractEntity;
 import model.entity.Player;
 import model.tile.AbstractTile;
 import util.KeySet;
-import util.physics.Direction;
+import util.physics.AbstractVector2;
+import util.physics.Vector2d;
 import util.physics.Vector2i;
 
 public class Camera {
@@ -137,6 +138,94 @@ public class Camera {
 	public HashMap<KeySet , Boolean> createLightMap( 
 			Player player , ArrayList<ArrayList<AbstractTile>> map ){
 		lightMap = new HashMap<>() ;
+		ArrayList<Vector2i> maxRange = new ArrayList<>() ;
+		for( int y = 0 ; y < map.size() ; y++ ){
+			for( int x = 0 ; x < map.get( 0 ).size() ; x++ ){
+				Vector2d currPos = new Vector2d( (double)x , (double)y ) ;
+				if( AbstractVector2.distance( 
+						player.getPosition() , 
+						currPos ) <
+					player.getViewRadius() ){
+					maxRange.add( currPos.toVector2i() ) ;
+				}
+			}
+		}
+		
+		if( maxRange.size() > 0 ){
+			for( Vector2i pos : maxRange ){
+				lightMap.putAll( drawLine( player.getPosition() , pos , map ) ) ;
+			}
+		}
+		
+		return lightMap ;
+	}
+
+	private HashMap<KeySet , Boolean> drawLine( 
+			Vector2d start , Vector2i stop , 
+			ArrayList<ArrayList<AbstractTile>> map ){
+		HashMap<KeySet , Boolean> results = new HashMap<KeySet , Boolean>() ;
+		
+		int d = 0;
+		 
+        int dx = Math.abs( stop.getX() - start.getX().intValue() ) ;
+        int dy = Math.abs( stop.getY() - start.getY().intValue() ) ;
+ 
+        int dx2 = 2 * dx ; // slope scaling factors to
+        int dy2 = 2 * dy ; // avoid floating point
+ 
+        // increment direction
+        int ix = start.getX().intValue() < stop.getX() ? 1 : -1 ; 
+        int iy = start.getY().intValue() < stop.getY() ? 1 : -1 ;
+ 
+        int x = start.getX().intValue() ;
+        int y = start.getY().intValue() ;
+ 
+        if ( dx >= dy ) {
+            while ( true ) {
+            	if( map.get( y ).get( x ).isPassable() ){
+            		results.put( new KeySet( x , y ) , true ) ;
+            	}
+            	else{
+            		results.put( new KeySet( x , y ) , true ) ;
+            		break ;
+            	}
+                if ( x == stop.getX() ){
+                    break;
+                }
+                x += ix ;
+                d += dy2 ;
+                if ( d >= dx ) {
+                    y += iy ;
+                    d -= dx2 ;
+                }
+            }
+        } else {
+            while ( true ) {
+            	if( map.get( y ).get( x ).isPassable() ){
+            		results.put( new KeySet( x , y ) , true ) ;
+            	}
+            	else{
+            		results.put( new KeySet( x , y ) , true ) ;
+            		break ;
+            	}
+                if ( y == stop.getY() ){
+                    break ;
+                }
+                y += iy ;
+                d += dx2 ;
+                if ( d >= dy ) {
+                    x += ix ;
+                    d -= dy2 ;
+                }
+            }
+        }
+		return results;
+	}
+	
+	/*
+	public HashMap<KeySet , Boolean> createLightMap( 
+			Player player , ArrayList<ArrayList<AbstractTile>> map ){
+		lightMap = new HashMap<>() ;
 		for( int i = -1 ; i <= 1 ; i++ ){
 			for( int j = -1 ; j <= 1 ; j++ ){
 				lightMap.putAll( recursiveFOV( 
@@ -250,4 +339,5 @@ public class Camera {
 		}
 		return lightMap ;
 	}
+	*/
 }

@@ -31,13 +31,9 @@ public class ScreenFunctions {
 		if ( 	indY < maxIndices.getY() && 
 				indX < maxIndices.getX() ) {
 			
-			if( AbstractVector2.distance( 
-							player.getPosition() , 
-							new Vector2d( (double)indX , (double)indY ) ) <
-						player.getViewRadius() && 
-						( lightMap.get( new KeySet( indX , indY ) ) != null &&
+			if( lightMap.get( new KeySet( indX , indY ) ) != null &&
 						lightMap.get( new KeySet( indX , indY ) )
-						.booleanValue() ) ){
+						.booleanValue() ){
 				
 			map.get( indY ).get( indX ).setDiscovered( true ) ;
 			ScreenFunctions.drawChar( screen , x , y , map , indX , indY ) ;
