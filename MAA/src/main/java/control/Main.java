@@ -13,56 +13,53 @@ import model.FactoryProducer;
 import model.entity.Player;
 import model.world.AbstractLevel;
 import util.ButtonUtils;
-import util.physics.Vector2d;
 import util.physics.Vector2i;
 import view.Camera;
 import view.Debug;
 import view.ScreenFunctions;
 
 public class Main {
-	public static Properties properties		= null ;
-	public static String artifactId			= "" ;
-	public static String version			= "" ;
-	public static String name				= "" ;
-	public static int screenWidth			= 80 ;
-	public static int screenHeight			= 24 ;
-	public static boolean debug				= false ;
-	public static FactoryProducer producer	= new FactoryProducer() ;
+	public static Properties	properties		= null ;
+	public static String		artifactId		= "" ;
+	public static String		version			= "" ;
+	public static String		name			= "" ;
+	public static int			screenWidth		= 80 ;
+	public static int			screenHeight	= 24 ;
+	public static boolean		debug			= false ;
 	
 	public static void main( String[] args ) {
 		Debug.logln( "[Game] : [Start]" ) ;
 		
 		boolean running = true ;
+		FactoryProducer producer	= new FactoryProducer() ;
 		
 		if( args.length > 0 ){
 			debug = Boolean.valueOf( args[ 0 ] ) ;
 		}
 		
-		//Initialize map and entities
-		ArrayList<AbstractLevel> levels = new ArrayList<AbstractLevel>() ;
-		levels.add( producer.getFactory( "level" ).getLevel( "standard" ) ) ;
-		levels.get( 0 ).generateEmptyMap( 200 , 200 ) ;
-		levels.get( 0 ).initEntities() ;
-		
 		//Initialize properties
 		initProperties() ;
+		
+		//Initialize map and entities
+		ArrayList<AbstractLevel> levels = new ArrayList<AbstractLevel>() ;
+		levels.add( producer.getFactory( "level" ).getLevel( "drunk" ) ) ;
+		levels.get( 0 ).generateMap( 100 , 100 ) ;
+		levels.get( 0 ).initEntities() ;
 		
 		//Initialize Player
 		Player player = (Player) levels.get( 0 ).getEntities().get( 0 ) ;
 		player.setViewRadius( 8 ) ;
-		player.setPosition( new Vector2d( 100d / 2 , 100d / 2 ) ) ;
+		player.setPosition( new Vector2i( 100 / 2 , 100 / 2 ) ) ;
 		
 		try( 	Terminal terminal = ScreenFunctions.startTerminal( 
-						name , 
-						screenWidth , 
-						screenHeight );
+						name , screenWidth , screenHeight );
 				Screen screen = new TerminalScreen( terminal ) ) {
 			//Initialize camera
 			Camera camera = new Camera( 
 					new Vector2i( 
 							screenWidth - ( screenWidth / 5 ) , 
 							screenHeight / 2 ) , 
-					new Vector2i() ) ;
+					null ) ;
 			//Initialize screen
 			ScreenFunctions.initScreen( screen ) ;
 			
@@ -78,57 +75,57 @@ public class Main {
 				camera.createLightMap( player , levels.get( 0 ).getMap() ) ;
 				camera.setVisibleEntities( levels.get( 0 ).getEntities() ) ;
 				
-				Vector2i minIndices = camera.getMinIndices() ;
-				Vector2i maxIndices = camera.getMaxIndices() ;
-				int indX = minIndices.getX() ;
-				int indY = minIndices.getY() ;
+				Vector2i minIndexes = camera.getMinIndexes() ;
+				Vector2i maxIndexes = camera.getMaxIndexes() ;
+				int indX = minIndexes.getX() ;
+				int indY = minIndexes.getY() ;
 				
 				//XXX Graphical stuff
-					//Wipe screen DO NOT MOVE-this needs to be BEFORE drawing
+				//Wipe screen DO NOT MOVE-this needs to be BEFORE drawing
 				ScreenFunctions.wipeScreen( screen ) ;	
 				
 				for( 	int y = screenHeight / 4 ; 
 						y < screenHeight - ( screenHeight / 4 ) ; 
 						y++ ) {
-					indX = minIndices.getX() ;
+					indX = minIndexes.getX() ;
 					for( 	int x = 0 ; 
 							x < screenWidth - ( screenWidth / 5 ) ; 
 							x++ ) {
 						//Draw what the camera can see
-							//Draw map
+						//Draw map
 						ScreenFunctions.drawMap( 
 								screen , x , y , 
-								camera.getLighMap() , maxIndices , minIndices , 
+								camera.getLighMap() , maxIndexes , minIndexes , 
 								levels.get( 0 ).getMap() , 
 								indX , indY , player ) ;
-							//TODO : Draw items on floor
-							//Draw entities
+						//TODO : Draw items on floor
+						//Draw entities
 						ScreenFunctions.drawEntities( screen , x , y , 
 								levels.get( 0 ).getEntities() , indX , indY ) ;
 						indX++ ;
-							//TODO : Draw GUI
+						//TODO : Draw GUI
 					}
 					indY++ ;
 				}
-					//Refresh screen DO NOT MOVE-this needs to be AFTER drawing
+				//Refresh screen DO NOT MOVE-this needs to be AFTER drawing
 				ScreenFunctions.refreshScreen( screen ) ;
 				
 				//XXX Input stuff
 				boolean doRepeat = false ;
 				do{
 					doRepeat = false ;
-						//Get input ( blocking )
+					//Get input ( blocking )
 					KeyStroke input = screen.readInput() ;
 					
-						//EXIT ( check escape or input closed )
+					//EXIT ( check escape or input closed )
 					if( ButtonUtils.areButtonsPressed( 
 							input , KeyType.Escape , KeyType.EOF ) ) {
 						running = false ;
 						doRepeat = false ;
 						break ;
 					}
-						//Player movement
-					Vector2d oldPos = new Vector2d( 
+					//Player movement
+					Vector2i oldPos = new Vector2i( 
 							player.getPosition().getX() , 
 							player.getPosition().getY() ) ;
 					player.move( input , levels.get( 0 ).getMap() ) ;
@@ -147,7 +144,7 @@ public class Main {
 			Debug.logln( "[Game] : [End]" ) ;
 		}
 	}
-
+	
 	public static void initProperties(){
 		Debug.logln( "initProperties : [Start]" , debug ) ;
 		properties = new Properties() ;

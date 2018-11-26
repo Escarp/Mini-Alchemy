@@ -1,13 +1,13 @@
 package model.entity;
 
 import java.util.ArrayList;
+
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 
 import model.tile.AbstractTile;
 import util.ButtonUtils;
-import util.physics.Vector2d;
 import util.physics.Vector2i;
 
 public class Player extends AbstractEntity {
@@ -23,7 +23,7 @@ public class Player extends AbstractEntity {
 		this.viewRadius = viewRadius ;
 	}
 	
-	public Player( Vector2d position ) {
+	public Player( Vector2i position ) {
 		character = '@' ;
 		foregroundColor = TextColor.ANSI.WHITE ;
 		backgroundColor = TextColor.ANSI.BLACK ;

@@ -3,6 +3,7 @@ package model.factory;
 import model.entity.AbstractEntity;
 import model.tile.AbstractTile;
 import model.world.AbstractLevel;
+import model.world.DrunkenDungeonLevel;
 import model.world.StandardLevel;
 
 public class FactoryLevel extends AbstractFactory {
@@ -21,6 +22,9 @@ public class FactoryLevel extends AbstractFactory {
 	public AbstractLevel getLevel(String level) {
 		if( level.equalsIgnoreCase( "STANDARD" ) ){
 			return new StandardLevel() ;
+		}
+		if( level.equalsIgnoreCase( "DRUNK" ) ){
+			return new DrunkenDungeonLevel() ;
 		}
 		return null;
 	}

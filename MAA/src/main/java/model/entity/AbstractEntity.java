@@ -1,14 +1,15 @@
 package model.entity;
 
 import java.util.ArrayList;
+
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.input.KeyStroke;
+
 import model.tile.AbstractTile;
-import util.physics.Vector2d;
 import util.physics.Vector2i;
 
 public abstract class AbstractEntity {
-	protected Vector2d position ;
+	protected Vector2i position ;
 	protected Vector2i direction ;
 	protected int speed ;
 	protected char character ;
@@ -21,7 +22,7 @@ public abstract class AbstractEntity {
 		return visible ;
 	}
 	
-	public Vector2d getPosition(){
+	public Vector2i getPosition(){
 		return position ;
 	}
 	
@@ -50,7 +51,7 @@ public abstract class AbstractEntity {
 		this.visible = visible ;
 	}
 	
-	public void setPosition( Vector2d position ) {
+	public void setPosition( Vector2i position ) {
 		this.position = position ;
 	}
 	
@@ -83,17 +84,17 @@ public abstract class AbstractEntity {
 			ArrayList<ArrayList<AbstractTile>> map ) ;
 	
 	public void move( int x , int y ) {
-		position.setX( (double) x ) ;
-		position.setY( (double) y ) ;
+		position.setX( x ) ;
+		position.setY( y ) ;
 	}
 	
-	public void move( double x , double y , int speed ) {
-		Vector2d res = new Vector2d( x , y ) ;
+	public void move( int x , int y , int speed ) {
+		Vector2i res = new Vector2i( x , y ) ;
 		res.multiply( speed ) ;
 		position.add( res ) ;
 	}
 	
-	public void move( Vector2d position ) {
+	public void move( Vector2i position ) {
 		position.multiply( speed ) ;
 		this.position.setX( position.getX() ) ;
 		this.position.setY( position.getY() ) ;

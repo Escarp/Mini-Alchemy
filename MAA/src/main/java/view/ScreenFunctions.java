@@ -18,8 +18,6 @@ import model.entity.AbstractEntity;
 import model.entity.Player;
 import model.tile.AbstractTile;
 import util.KeySet;
-import util.physics.AbstractVector2;
-import util.physics.Vector2d;
 import util.physics.Vector2i;
 
 public class ScreenFunctions {
@@ -34,13 +32,15 @@ public class ScreenFunctions {
 			if( lightMap.get( new KeySet( indX , indY ) ) != null &&
 						lightMap.get( new KeySet( indX , indY ) )
 						.booleanValue() ){
-				
-			map.get( indY ).get( indX ).setDiscovered( true ) ;
-			ScreenFunctions.drawChar( screen , x , y , map , indX , indY ) ;
-			
+				if( map.get( y ).get( x ) != null ){
+					map.get( indY ).get( indX ).setDiscovered( true ) ;
+					ScreenFunctions.drawChar( 
+							screen , x , y , map , indX , indY ) ;
+				}
 			}
 			else{
-				if( map.get( indY ).get( indX ).isDiscovered() ){
+				if( map.get( indY ).get( indX ) != null && 
+						map.get( indY ).get( indX ).isDiscovered() ){
 					ScreenFunctions.drawChar( 
 							screen , x , y , map , indX , indY , 
 							TextColor.ANSI.WHITE , 
@@ -72,16 +72,10 @@ public class ScreenFunctions {
 			ArrayList<ArrayList<AbstractTile>> map , 
 			int indX , 
 			int indY ){
-		screen.setCharacter( 
-				x , 
-				y ,  
-				new TextCharacter( 
-						map.get( indY ).get( indX )
-							.getCharacter() ,
-						map.get( indY ).get( indX )
-							.getForegroundColor() ,
-						map.get( indY ).get( indX )
-							.getBackgroundColor() ) ) ;
+		screen.setCharacter( x , y , new TextCharacter( 
+				map.get( indY ).get( indX ).getCharacter() ,
+				map.get( indY ).get( indX ).getForegroundColor() ,
+				map.get( indY ).get( indX ).getBackgroundColor() ) ) ;
 	}
 	
 	public static void drawChar( 
@@ -91,13 +85,10 @@ public class ScreenFunctions {
 			AbstractEntity entity , 
 			int indX , 
 			int indY ){
-		screen.setCharacter( 
-				x , 
-				y ,  
-				new TextCharacter( 
-						entity.getCharacter() ,
-						entity.getForegroundColor() ,
-						entity.getBackgroundColor() ) ) ;
+		screen.setCharacter( x , y , new TextCharacter( 
+				entity.getCharacter() ,
+				entity.getForegroundColor() ,
+				entity.getBackgroundColor() ) ) ;
 	}
 	
 	public static void drawChar( 
@@ -109,14 +100,9 @@ public class ScreenFunctions {
 			int indY , 
 			TextColor fg , 
 			TextColor bg ){
-		screen.setCharacter( 
-				x , 
-				y ,  
-				new TextCharacter( 
-						map.get( indY ).get( indX )
-							.getCharacter() ,
-						fg , 
-						bg ) ) ;
+		screen.setCharacter( x , y , new TextCharacter( 
+				map.get( indY ).get( indX ).getCharacter() , 
+				fg , bg ) ) ;
 	}
 	
 	public static void initScreen( Screen screen ) throws IOException{

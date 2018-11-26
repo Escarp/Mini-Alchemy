@@ -8,14 +8,13 @@ import model.entity.Player;
 import model.tile.AbstractTile;
 import util.KeySet;
 import util.physics.AbstractVector2;
-import util.physics.Vector2d;
 import util.physics.Vector2i;
 
 public class Camera {
 	private Vector2i dimensions ;
 	private Vector2i position ;
-	private Vector2i minIndices ;
-	private Vector2i maxIndices ;
+	private Vector2i minIndexes ;
+	private Vector2i maxIndexes ;
 	private HashMap<KeySet , Boolean> lightMap ;
 	
 	//Getters
@@ -31,12 +30,12 @@ public class Camera {
 		return position;
 	}
 	
-	public Vector2i getMinIndices() {
-		return minIndices ;
+	public Vector2i getMinIndexes() {
+		return minIndexes ;
 	}
 	
-	public Vector2i getMaxIndices() {
-		return maxIndices ;
+	public Vector2i getMaxIndexes() {
+		return maxIndexes ;
 	}
 
 	//Setters
@@ -52,12 +51,12 @@ public class Camera {
 		this.position = center;
 	}
 	
-	public void setMinIndices( Vector2i minIndices ) {
-		this.minIndices = minIndices ;
+	public void setMinIndexes( Vector2i minIndexes ) {
+		this.minIndexes = minIndexes ;
 	}
 	
-	public void setMaxIndices( Vector2i maxIndices ) {
-		this.maxIndices = maxIndices ;
+	public void setMaxIndexes( Vector2i maxIndexes ) {
+		this.maxIndexes = maxIndexes ;
 	}
 
 	//Constructors
@@ -68,61 +67,61 @@ public class Camera {
 	
 	//Methods
 	public void setIndices( ArrayList<ArrayList<AbstractTile>> map ) {
-		minIndices = new Vector2i() ;
-		maxIndices = new Vector2i() ;
+		minIndexes = new Vector2i() ;
+		maxIndexes = new Vector2i() ;
 		
 		//MinIndices
 		if( position.getX() < 0 ) {
-			minIndices.setX( 0 ) ;
+			minIndexes.setX( 0 ) ;
 		}
 		else {
-			minIndices.setX( position.getX() ) ;
+			minIndexes.setX( position.getX() ) ;
 		}
 		
 		if( position.getY() < 0 ) {
-			minIndices.setY( 0 ) ;
+			minIndexes.setY( 0 ) ;
 		}
 		else {
-			minIndices.setY( position.getY() ) ;
+			minIndexes.setY( position.getY() ) ;
 		}
 		
 		//MaxIndices
 		if( position.getX() + dimensions.getX() > map.get( 0 ).size() ) {
-			maxIndices.setX( map.get( 0 ).size() ) ;
+			maxIndexes.setX( map.get( 0 ).size() ) ;
 		}
 		else {
-			maxIndices.setX( position.getX() + dimensions.getX() ) ;
+			maxIndexes.setX( position.getX() + dimensions.getX() ) ;
 		}
 		
 		if( position.getY() + dimensions.getY() > map.size() ) {
-			maxIndices.setY( map.size() ) ;
+			maxIndexes.setY( map.size() ) ;
 		}
 		else {
-			maxIndices.setY( position.getY() + dimensions.getY() ) ;
+			maxIndexes.setY( position.getY() + dimensions.getY() ) ;
 		}
 		
 		//Safeguards
-		if( minIndices.getX() > map.get( 0 ).size() - dimensions.getX() ) {
-			minIndices.setX( map.get( 0 ).size() - dimensions.getX() ) ;
+		if( minIndexes.getX() > map.get( 0 ).size() - dimensions.getX() ) {
+			minIndexes.setX( map.get( 0 ).size() - dimensions.getX() ) ;
 		}
-		if( minIndices.getY() > map.size() - dimensions.getY() ) {
-			minIndices.setY( map.size() - dimensions.getY() ) ;
+		if( minIndexes.getY() > map.size() - dimensions.getY() ) {
+			minIndexes.setY( map.size() - dimensions.getY() ) ;
 		}
 		
-		if( maxIndices.getX() < dimensions.getX() ) {
-			maxIndices.setX( dimensions.getX() ) ;
+		if( maxIndexes.getX() < dimensions.getX() ) {
+			maxIndexes.setX( dimensions.getX() ) ;
 		}
-		if( maxIndices.getY() < dimensions.getY() ) {
-			maxIndices.setY( dimensions.getY() ) ;
+		if( maxIndexes.getY() < dimensions.getY() ) {
+			maxIndexes.setY( dimensions.getY() ) ;
 		}
 	}
 	
 	public void setVisibleEntities( ArrayList<AbstractEntity> entities ) {
 		for( AbstractEntity entity : entities ) {
-			if( 	( entity.getPosition().getY() > minIndices.getY() &&
-					entity.getPosition().getY() < maxIndices.getY() ) &&
-					( entity.getPosition().getX() > minIndices.getX() &&
-					entity.getPosition().getX() < maxIndices.getX() && 
+			if( 	( entity.getPosition().getY() > minIndexes.getY() &&
+					entity.getPosition().getY() < maxIndexes.getY() ) &&
+					( entity.getPosition().getX() > minIndexes.getX() &&
+					entity.getPosition().getX() < maxIndexes.getX() && 
 					lightMap.get( entity.getPosition() ) != null ) ) {
 				entity.setVisible( true ) ;
 			}
@@ -141,12 +140,12 @@ public class Camera {
 		ArrayList<Vector2i> maxRange = new ArrayList<>() ;
 		for( int y = 0 ; y < map.size() ; y++ ){
 			for( int x = 0 ; x < map.get( 0 ).size() ; x++ ){
-				Vector2d currPos = new Vector2d( (double)x , (double)y ) ;
+				Vector2i currPos = new Vector2i( x , y ) ;
 				if( AbstractVector2.distance( 
 						player.getPosition() , 
 						currPos ) <
 					player.getViewRadius() ){
-					maxRange.add( currPos.toVector2i() ) ;
+					maxRange.add( currPos ) ;
 				}
 			}
 		}
@@ -161,7 +160,7 @@ public class Camera {
 	}
 
 	private HashMap<KeySet , Boolean> drawLine( 
-			Vector2d start , Vector2i stop , 
+			Vector2i start , Vector2i stop , 
 			ArrayList<ArrayList<AbstractTile>> map ){
 		HashMap<KeySet , Boolean> results = new HashMap<KeySet , Boolean>() ;
 		
@@ -182,7 +181,8 @@ public class Camera {
  
         if ( dx >= dy ) {
             while ( true ) {
-            	if( map.get( y ).get( x ).isPassable() ){
+            	if(  map.get( y ).get( x ) != null && 
+            			map.get( y ).get( x ).isPassable() ){
             		results.put( new KeySet( x , y ) , true ) ;
             	}
             	else{
@@ -201,7 +201,8 @@ public class Camera {
             }
         } else {
             while ( true ) {
-            	if( map.get( y ).get( x ).isPassable() ){
+            	if( map.get( y ).get( x ) != null && 
+            			map.get( y ).get( x ).isPassable() ){
             		results.put( new KeySet( x , y ) , true ) ;
             	}
             	else{

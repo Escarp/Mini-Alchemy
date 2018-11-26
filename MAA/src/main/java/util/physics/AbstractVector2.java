@@ -51,4 +51,10 @@ public class AbstractVector2<T> {
 				( Math.pow( ( to.x - from.x ) , 2 ) + 
 				Math.pow( ( to.y - from.y ) , 2 ) ) ) ;
 	}
+	
+	public static double distance( Vector2i from , Vector2i to ) {
+		return Math.sqrt( 
+				( Math.pow( ( to.x - from.x ) , 2 ) + 
+				Math.pow( ( to.y - from.y ) , 2 ) ) ) ;
+	}
 }

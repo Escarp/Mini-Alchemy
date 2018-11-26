@@ -2,8 +2,6 @@ package model.world;
 
 import java.util.ArrayList;
 
-import com.googlecode.lanterna.TextColor;
-
 import control.Main;
 import model.FactoryProducer;
 import model.entity.AbstractEntity;
@@ -46,7 +44,26 @@ public abstract class AbstractLevel {
 		Debug.logln( "initEntities : [End]" , Main.debug ) ;
 	}
 	
-	public abstract void generateEmptyMap( int rows , int cols ) ;
+	public void generateEmptyMap(int rows, int cols) {
+		for( int y = 0 ; y < rows ; y++ ){
+			map.add( new ArrayList<AbstractTile>() ) ;
+			for( int x = 0 ; x < cols ; x++ ){
+				if( x == 0 || x == cols - 1 ){
+					map.get( y ).add( producer.getFactory( "TILE" )
+							.getTile( "WALL" ) ) ;
+				}
+				else if( y == 0 || y == rows - 1 ){
+					map.get( y ).add( producer.getFactory( "TILE" )
+							.getTile( "WALL" ) ) ;
+				}
+				else
+				{
+					map.get( y ).add( producer.getFactory( "TILE" )
+							.getTile( "FLOOR" ) ) ;
+				}
+			}
+		}
+	}
 	
 	public abstract void generateMap( int rows , int cols ) ;
 }
