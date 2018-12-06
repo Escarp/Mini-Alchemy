@@ -5,13 +5,13 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import model.component.AComponent;
-import util.EntityUtils;
+import util.EntityUtils.EntityType;
 
 @SuppressWarnings( "serial" )
 public class Entity implements Serializable {
 	private String id ;
 	private HashMap<String , AComponent> components ;
-	private EntityUtils.EntityType type ;
+	private EntityType type ;
 
 	//Getters
 	public String getId() {
@@ -20,7 +20,7 @@ public class Entity implements Serializable {
 	public HashMap<String , AComponent> getComponents(){
 		return components ;
 	}
-	public EntityUtils.EntityType getType() {
+	public EntityType getType() {
 		return type ;
 	}
 
@@ -31,7 +31,7 @@ public class Entity implements Serializable {
 	public void setComponents( HashMap<String , AComponent> components ) {
 		this.components.putAll( components ) ;
 	}
-	public void setType( EntityUtils.EntityType type ){
+	public void setType( EntityType type ){
 		this.type = type ;
 	}
 	
@@ -39,16 +39,16 @@ public class Entity implements Serializable {
 	public Entity() {
 		id = UUID.randomUUID().toString() ;
 		components = new HashMap<>() ;
-		type = EntityUtils.EntityType.DEFAULT ;
+		type = EntityType.DEFAULT ;
 	}
 	
 	public Entity( String id ) {
 		this.id = id ;
 		components = new HashMap<>() ;
-		type = EntityUtils.EntityType.DEFAULT ;
+		type = EntityType.DEFAULT ;
 	}
 	
-	public Entity( String id , EntityUtils.EntityType type ) {
+	public Entity( String id , EntityType type ) {
 		this( id ) ;
 		this.type = type ;
 	}

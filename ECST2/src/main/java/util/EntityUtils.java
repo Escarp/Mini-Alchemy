@@ -1,7 +1,7 @@
 package util;
 
 public class EntityUtils {
-	public static enum EntityType {
+	public enum EntityType {
 		DEFAULT , PLAYER
 	} ;
 }

@@ -4,7 +4,7 @@ import model.DAO.factory.ComponentFactory;
 import model.component.Render;
 import model.entity.Entity;
 import util.ComponentUtils;
-import util.EntityUtils;
+import util.EntityUtils.EntityType;
 
 public class EntityBuilder {
 	ComponentFactory factory ;
@@ -23,7 +23,7 @@ public class EntityBuilder {
 		return entity ;
 	}
 	
-	public Entity createEntity( EntityUtils.EntityType type ) {
+	public Entity createEntity( EntityType type ) {
 		switch( type ) {
 			case PLAYER : {
 				Entity entity =  buildEntity(	ComponentUtils.POSITION , 

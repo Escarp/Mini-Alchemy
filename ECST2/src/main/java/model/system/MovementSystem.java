@@ -3,17 +3,16 @@ package model.system;
 import model.component.AComponent;
 import model.component.Position;
 import model.component.Velocity;
+import util.SystemsUtils.SystemType;
 
 public class MovementSystem extends ASystem {
-
-	public MovementSystem( String name ) {
-		super( name );
-	}
 	
+	//Constructors
 	public MovementSystem() {
-		this( "movement" ) ;
+		super( "movement" , SystemType.MOVEMENT ) ;
 	}
 
+	//Methods
 	@Override
 	public void update( AComponent... components ) {
 		Position position = null ;
