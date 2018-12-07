@@ -28,7 +28,10 @@ public class SystemsManager {
 	
 	public void init() {
 		try {
+			//Create screen
 			terminal = new GameTerminal( "Test" , 50 , 30 ) ;
+			
+			//Add all the systems
 			systems.put(	SystemType.GRAPHICS , 
 							new GraphicsSystem( terminal ) ) ;
 			systems.put(	SystemType.KEY_MOVEMENT , 
@@ -41,6 +44,7 @@ public class SystemsManager {
 	
 	public void draw( ArrayList<Entity> entities ) {
 		try{
+			//Wipe screen : WARNING : this NEEDS to be here before everything!
 			terminal.wipeScreen() ;
 			if( systems.containsKey( SystemType.GRAPHICS ) ) {
 				for( Entity entity : entities ){
@@ -49,6 +53,7 @@ public class SystemsManager {
 							entity.getComponent( ComponentUtils.RENDER ) ) ;
 				}
 			}
+			//Refresh screen : WARNING : this NEEDS to be here after everything!
 			terminal.refreshScreen() ;
 		}
 		catch( IOException e ) {
@@ -58,6 +63,7 @@ public class SystemsManager {
 	
 	public void stop() {
 		try{
+			//Stop the screen
 			terminal.stop() ;
 		}
 		catch( Exception e ) {
@@ -69,11 +75,21 @@ public class SystemsManager {
 		boolean running = true ;
 		
 		try {
+			//Get input
 			KeyStroke input = terminal.getInput() ;
 			
-			for( Entity entity : entities ){
-				if( entity.getType() == EntityType.PLAYER ) {
-					if( systems.containsKey( SystemType.KEY_MOVEMENT ) ) {
+			//Exit condition
+			if( ButtonUtils.areButtonsPressed( 
+					input , KeyType.Escape , KeyType.EOF ) ) {
+				running = false ;
+				return running ;
+			}
+			
+			//Update entities that have to move with key inputs like the player
+			if( systems.containsKey( SystemType.KEY_MOVEMENT ) ) {
+				for( Entity entity : entities ){
+					if( entity.getType() == EntityType.PLAYER ) {
+						
 						KeyMovementSystem kms = 
 								( KeyMovementSystem )systems.get( 
 										SystemType.KEY_MOVEMENT ) ;
@@ -84,11 +100,6 @@ public class SystemsManager {
 								) ;
 					}
 				}
-			}
-			
-			if( ButtonUtils.areButtonsPressed( 
-					input , KeyType.Escape , KeyType.EOF ) ) {
-				running = false ;
 			}
 		}
 		catch( IOException e ) {
