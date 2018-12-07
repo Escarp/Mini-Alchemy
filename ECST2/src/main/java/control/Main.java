@@ -12,6 +12,7 @@ public class Main {
 		boolean running = true ;
 		SystemsManager sm = new SystemsManager() ;
 		sm.init() ;
+		//Pretty much everything beyond this line is temporary
 		
 		EntityBuilder eb = new EntityBuilder() ;
 		
@@ -29,8 +30,8 @@ public class Main {
 				//DRAW ENTITIES
 			sm.draw( entities ) ;
 			
-			//INPUT
-			running = sm.input() ;
+			//INPUT : TODO : change this to method : sm.input()
+			running = sm.input( entities ) ;
 		}
 		
 		sm.stop();
