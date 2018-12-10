@@ -32,8 +32,10 @@ public class SystemsManager {
 	}
 	
 	public void draw( ArrayList<Entity> entities ) {
+		//Check if the system got deleted
 		if( systems.containsKey( SystemType.GRAPHICS ) ) {
 			for( Entity entity : entities ){
+				//For each entity pass the position and render to the screen
 				systems.get( SystemType.GRAPHICS ).update( 
 						entity.getComponent( ComponentUtils.POSITION ) , 
 						entity.getComponent( ComponentUtils.RENDER ) ) ;
@@ -43,19 +45,17 @@ public class SystemsManager {
 	
 	public boolean input( ArrayList<Entity> entities , KeyStroke input ) {
 		boolean running = true ;
-		
 		//Exit condition
 		if( ButtonUtils.areButtonsPressed( 
 				input , KeyType.Escape , KeyType.EOF ) ) {
 			running = false ;
 			return running ;
 		}
-		
 		//Update entities that have to move with key inputs like the player
 		if( systems.containsKey( SystemType.KEY_MOVEMENT ) ) {
 			for( Entity entity : entities ){
 				if( entity.getType() == EntityType.PLAYER ) {
-					
+					//Move the entities that need moving
 					KeyMovementSystem kms = 
 							( KeyMovementSystem )systems.get( 
 									SystemType.KEY_MOVEMENT ) ;
@@ -67,7 +67,6 @@ public class SystemsManager {
 				}
 			}
 		}
-		
 		return running ;
 	}
 }

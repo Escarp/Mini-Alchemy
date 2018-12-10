@@ -18,9 +18,9 @@ public class EmptyMap extends AMap {
 	//Methods
 	@Override
 	public void generateMap( int width , int height ) {
+		//Creates a box with floors and walls
 		map = new ArrayList<>() ;
 		TileLoader loader = new TileLoader() ;
-		
 		for( int y = 0 ; y < height ; y++ ){
 			map.add( new ArrayList<>() ) ;
 			for( int x = 0 ; x < width ; x++ ){

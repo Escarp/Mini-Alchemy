@@ -9,6 +9,7 @@ import util.ComponentUtils;
 public class ComponentFactory {
 	public AComponent getComponent( String name ) {
 		switch( name ) {
+			//Switch names to create appropriate component
 			case( ComponentUtils.POSITION ) : {
 				return new Position() ;
 			}

@@ -4,6 +4,8 @@ import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 
 public final class ButtonUtils {
+	
+	//Methods
 	public static boolean isButtonPressed( KeyStroke input , KeyType type ) {
 		return input.equals( new KeyStroke( type ) ) ;
 	}
@@ -37,14 +39,12 @@ public final class ButtonUtils {
 			KeyStroke input , 
 			KeyType... types ){
 		boolean pressed = false ;
-		
 		for( KeyType type : types ){
 			pressed = isButtonPressed( input , type ) ;
 			if( pressed ){
 				break ;
 			}
 		}
-		
 		return pressed ;
 	}
 	
@@ -52,14 +52,12 @@ public final class ButtonUtils {
 			KeyStroke input , 
 			Character... characters ){
 		boolean pressed = false ;
-		
 		for( Character character : characters ){
 			pressed = isButtonPressed( input , character ) ;
 			if( pressed ){
 				break ;
 			}
 		}
-		
 		return pressed ;
 	}
 	
@@ -70,7 +68,6 @@ public final class ButtonUtils {
 			boolean isAltDown ,
 			Character... characters ) {
 		boolean pressed = false ;
-		
 		for( Character character : characters ){
 			pressed = isButtonPressed( 
 					input , 
@@ -82,8 +79,6 @@ public final class ButtonUtils {
 				break ;
 			}
 		}
-		
 		return pressed ;
 	}
-	
 }

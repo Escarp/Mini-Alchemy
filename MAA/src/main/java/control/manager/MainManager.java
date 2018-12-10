@@ -18,14 +18,18 @@ public class MainManager {
 	private int currentLevel ;
 	
 	public MainManager() {
+		//Initialize Systems and Maps
 		systemsManager	= new SystemsManager() ;
 		mapManager		= new MapManager() ;
 		
+		//Set current level
 		currentLevel = 0 ;
 		
+		//Initialize properties and build the screen with them
 		initProperties() ;
 		initTerminal() ;
 		
+		//End systems initialization passing the screen
 		systemsManager.init( gTerminal ) ;
 	}
 	
@@ -48,8 +52,8 @@ public class MainManager {
 	public void initProperties() {
 		Debug.logln( "initProperties : [Start]" ) ;
 		Properties properties = new Properties() ;
-		
 		try {
+			//Load properties
 			properties.load( Main.class.getClassLoader().getResourceAsStream( 
 					"application.properties" ) ) ;
 			Debug.logln( "initproperties : " + properties.toString() ) ;
@@ -57,21 +61,20 @@ public class MainManager {
 		catch ( Exception e ) {
 			Debug.logErr( "Main : initProperties" , e ) ;
 		}
-		
 		artifactId = properties.getProperty( "artifactId" ) ;
 		version = properties.getProperty( "version" ) ;
 		screenWidth = Integer.parseInt( properties.getProperty( 
 				"screenWidth" ) ) ;
 		screenHeight = Integer.parseInt( properties.getProperty( 
 				"screenHeight" ) ) ;
-		
 		Debug.logln( "initProperties : [End]" ) ;
 	}
 	
 	public boolean input() {
 		boolean running = false ;
-		
 		try {
+			//Get the input from the screen ( blocking ) and pass it to 
+			//the systems for processsing
 			running = systemsManager.input( 
 					mapManager.getLevels().get( currentLevel ).getEntities() , 
 					gTerminal.getInput() ) ;
@@ -79,7 +82,6 @@ public class MainManager {
 		catch( IOException e ) {
 			Debug.logErr( "MainManager : input" , e ) ;
 		}
-		
 		return running ;
 	}
 	
@@ -88,7 +90,9 @@ public class MainManager {
 			//Wipe screen : WARNING : this NEEDS to be here before everything!
 			gTerminal.wipeScreen() ;
 			
+			//Draw map
 			mapManager.draw( gTerminal , currentLevel ) ;
+			//Draw entities
 			systemsManager.draw( 
 					mapManager.getLevels().get( currentLevel ).getEntities() ) ;
 			
@@ -101,11 +105,12 @@ public class MainManager {
 	}
 	
 	public void update() {
-		//TODO
+		//TODO : MainManager : update
 	}
 	
 	public void stop() {
 		try {
+			//Stop the screen
 			gTerminal.stop() ;
 		}
 		catch( IOException e ) {

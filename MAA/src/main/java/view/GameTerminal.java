@@ -22,6 +22,7 @@ public class GameTerminal {
 	
 	public GameTerminal( String name , int width , int height ) 
 			throws IOException {
+		//Create terminal with selected specifics
 		terminal = new DefaultTerminalFactory()
 				.setTerminalEmulatorTitle( name )
 				.setTerminalEmulatorColorConfiguration( 
@@ -31,6 +32,8 @@ public class GameTerminal {
 				.setInitialTerminalSize( new TerminalSize( width , height ) )
 				.createTerminal() ;
 		screen = new TerminalScreen( terminal ) ;
+		
+		//Start the screen and remove cursor
 		screen.startScreen() ;
 		screen.setCursorPosition( null ) ;
 	}

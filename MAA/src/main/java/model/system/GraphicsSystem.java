@@ -22,8 +22,8 @@ public class GraphicsSystem extends ASystem {
 	public void update( AComponent... components ) {
 		Position position = null ;
 		Render render = null ;
-		
 		for( AComponent component : components ){
+			//Get components from varArgs
 			if( component instanceof Position ){
 				position = ( Position )component ;
 			}
@@ -31,8 +31,8 @@ public class GraphicsSystem extends ASystem {
 				render = ( Render )component ;
 			}
 		}
-		
 		if( position != null && render != null ){
+			//Draw
 			gameTerminal.drawRenderAt( position , render ) ;
 		}
 	}

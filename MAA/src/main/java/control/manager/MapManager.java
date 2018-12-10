@@ -18,6 +18,7 @@ public class MapManager {
 	}
 	
 	public MapManager() {
+		//Generate empty map and add player : Warning : to be changed
 		levels = new ArrayList<>() ;
 		levels.add( new EmptyMap() ) ;
 		levels.get( 0 ).generateMap( 50 , 50 ) ;
@@ -28,6 +29,7 @@ public class MapManager {
 			for(	int x = 0 ; 
 					x < levels.get( level ).getMap().get( 0 ).size() ; 
 					x++ ) {
+				//Pass char and position to the screen
 				terminal.drawCharAt( 
 						levels.get( level )
 								.getMap()
