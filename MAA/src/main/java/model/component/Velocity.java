@@ -1,6 +1,6 @@
 package model.component;
 
-import util.ComponentUtils;
+import util.ComponentUtils.ComponentType;
 
 @SuppressWarnings( "serial" )
 public class Velocity extends AComponent {
@@ -23,14 +23,14 @@ public class Velocity extends AComponent {
 	}
 	
 	//Constructors
-	public Velocity( String name ) {
-		super( name );
+	public Velocity( ComponentType type ) {
+		super( type );
 		xVel = 0 ;
 		yVel = 0 ;
 	}
 	
 	public Velocity() {
-		this( ComponentUtils.VELOCITY ) ;
+		this( ComponentType.VELOCITY ) ;
 	}
 	
 	//Methods
@@ -59,8 +59,8 @@ public class Velocity extends AComponent {
 		return "Velocity [xVel=" + xVel
 				+ ", yVel="
 				+ yVel
-				+ ", name="
-				+ name
+				+ ", type="
+				+ type
 				+ "]";
 	}
 }

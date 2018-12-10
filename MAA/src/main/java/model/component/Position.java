@@ -1,6 +1,6 @@
 package model.component;
 
-import util.ComponentUtils;
+import util.ComponentUtils.ComponentType;
 
 @SuppressWarnings( "serial" )
 public class Position extends AComponent {
@@ -23,14 +23,14 @@ public class Position extends AComponent {
 	}
 
 	//Constructors
-	public Position( String name ) {
-		super( name );
+	public Position( ComponentType type ) {
+		super( type );
 		x = 0 ;
 		y = 0 ;
 	}
 	
 	public Position(){
-		this( ComponentUtils.POSITION ) ;
+		this( ComponentType.POSITION ) ;
 	}
 	
 	//Methods
@@ -56,6 +56,6 @@ public class Position extends AComponent {
 	
 	@Override
 	public String toString() {
-		return "Position [x=" + x + ", y=" + y + ", name=" + name + "]";
+		return "Position [x=" + x + ", y=" + y + ", type=" + type + "]";
 	}
 }

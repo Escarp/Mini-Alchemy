@@ -4,19 +4,19 @@ import model.component.AComponent;
 import model.component.Position;
 import model.component.Render;
 import model.component.Velocity;
-import util.ComponentUtils;
+import util.ComponentUtils.ComponentType;
 
 public class ComponentFactory {
-	public AComponent getComponent( String name ) {
-		switch( name ) {
+	public AComponent getComponent( ComponentType type ) {
+		switch( type ) {
 			//Switch names to create appropriate component
-			case( ComponentUtils.POSITION ) : {
+			case POSITION : {
 				return new Position() ;
 			}
-			case( ComponentUtils.RENDER ) : {
+			case RENDER : {
 				return new Render() ;
 			}
-			case( ComponentUtils.VELOCITY ) : {
+			case VELOCITY : {
 				return new Velocity() ;
 			}
 			default : {

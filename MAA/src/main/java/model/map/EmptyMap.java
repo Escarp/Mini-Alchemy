@@ -12,7 +12,7 @@ public class EmptyMap extends AMap {
 		EntityBuilder eb = new EntityBuilder() ;
 		
 		entities = new ArrayList<>() ;
-		entities.add( eb.createEntity( EntityType.PLAYER ) ) ;
+		entities.add( eb.loadEntity( EntityType.PLAYER ) ) ;
 	}
 	
 	//Methods

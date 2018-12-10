@@ -1,6 +1,5 @@
 package control.manager;
 
-import java.io.IOException;
 import java.util.Properties;
 
 import control.Main;
@@ -33,8 +32,6 @@ public class MainManager {
 		systemsManager.init( gTerminal ) ;
 	}
 	
-	
-	
 	private void initTerminal() {
 		Debug.logln( "initTerminal : [Start]" ) ;
 		try {
@@ -43,7 +40,7 @@ public class MainManager {
 					artifactId + " " + version , screenWidth , screenHeight ) ;
 			Debug.logln( "initTerminal : " + gTerminal.toString() ) ;
 		}
-		catch( IOException e ) {
+		catch( Exception e ) {
 			Debug.logErr( "MainManager : initTerminal" , e ) ;
 		}
 		Debug.logln( "initTerminal : [End]" ) ;
@@ -79,7 +76,7 @@ public class MainManager {
 					mapManager.getLevels().get( currentLevel ).getEntities() , 
 					gTerminal.getInput() ) ;
 		}
-		catch( IOException e ) {
+		catch( Exception e ) {
 			Debug.logErr( "MainManager : input" , e ) ;
 		}
 		return running ;
@@ -99,13 +96,13 @@ public class MainManager {
 			//Refresh screen : WARNING : this NEEDS to be here after everything!
 			gTerminal.refreshScreen() ;
 		}
-		catch( IOException e ) {
+		catch( Exception e ) {
 			Debug.logErr( "MainManager : draw" , e ) ;
 		}
 	}
 	
 	public void update() {
-		//TODO : MainManager : update
+		//To fill :3
 	}
 	
 	public void stop() {
@@ -113,7 +110,7 @@ public class MainManager {
 			//Stop the screen
 			gTerminal.stop() ;
 		}
-		catch( IOException e ) {
+		catch( Exception e ) {
 			Debug.logErr( "MainManager : stop" , e ) ;
 		}
 	}

@@ -21,7 +21,7 @@ public class MapManager {
 		//Generate empty map and add player : Warning : to be changed
 		levels = new ArrayList<>() ;
 		levels.add( new EmptyMap() ) ;
-		levels.get( 0 ).generateMap( 50 , 50 ) ;
+		levels.get( 0 ).generateMap( 100 , 40 ) ;
 	}
 	
 	public void draw( GameTerminal terminal , int level ) {

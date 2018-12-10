@@ -11,7 +11,7 @@ import model.system.ASystem;
 import model.system.GraphicsSystem;
 import model.system.KeyMovementSystem;
 import util.ButtonUtils;
-import util.ComponentUtils;
+import util.ComponentUtils.ComponentType;
 import util.EntityUtils.EntityType;
 import util.SystemsUtils.SystemType;
 import view.GameTerminal;
@@ -37,8 +37,8 @@ public class SystemsManager {
 			for( Entity entity : entities ){
 				//For each entity pass the position and render to the screen
 				systems.get( SystemType.GRAPHICS ).update( 
-						entity.getComponent( ComponentUtils.POSITION ) , 
-						entity.getComponent( ComponentUtils.RENDER ) ) ;
+						entity.getComponent( ComponentType.POSITION ) , 
+						entity.getComponent( ComponentType.RENDER ) ) ;
 			}
 		}
 	}
@@ -61,8 +61,8 @@ public class SystemsManager {
 									SystemType.KEY_MOVEMENT ) ;
 					kms.setInput( input ) ;
 					kms.update( 
-							entity.getComponent( ComponentUtils.POSITION ) ,
-							entity.getComponent( ComponentUtils.VELOCITY ) 
+							entity.getComponent( ComponentType.POSITION ) ,
+							entity.getComponent( ComponentType.VELOCITY ) 
 							) ;
 				}
 			}

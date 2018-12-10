@@ -2,7 +2,7 @@ package model.component;
 
 import com.googlecode.lanterna.TextColor;
 
-import util.ComponentUtils;
+import util.ComponentUtils.ComponentType;
 
 @SuppressWarnings( "serial" )
 public class Render extends AComponent {
@@ -33,15 +33,15 @@ public class Render extends AComponent {
 	}
 
 	//Constructors
-	public Render( String name ) {
-		super( name );
+	public Render( ComponentType type ) {
+		super( type );
 		fColor = TextColor.ANSI.WHITE ;
 		bColor = TextColor.ANSI.BLACK ;
 		character = '?' ;
 	}
 	
 	public Render() {
-		this( ComponentUtils.RENDER ) ;
+		this( ComponentType.RENDER ) ;
 	}
 	
 	//Methods
@@ -82,8 +82,8 @@ public class Render extends AComponent {
 				+ bColor
 				+ ", character="
 				+ character
-				+ ", name="
-				+ name
+				+ ", type="
+				+ type
 				+ "]";
 	}
 	

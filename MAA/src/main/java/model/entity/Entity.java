@@ -5,19 +5,20 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import model.component.AComponent;
+import util.ComponentUtils.ComponentType;
 import util.EntityUtils.EntityType;
 
 @SuppressWarnings( "serial" )
 public class Entity implements Serializable {
 	private String id ;
-	private HashMap<String , AComponent> components ;
+	private HashMap<ComponentType , AComponent> components ;
 	private EntityType type ;
 
 	//Getters
 	public String getId() {
 		return id;
 	}
-	public HashMap<String , AComponent> getComponents(){
+	public HashMap<ComponentType , AComponent> getComponents(){
 		return components ;
 	}
 	public EntityType getType() {
@@ -28,7 +29,8 @@ public class Entity implements Serializable {
 	public void setId( String id ) {
 		this.id = id;
 	}
-	public void setComponents( HashMap<String , AComponent> components ) {
+	public void setComponents( 
+			HashMap<ComponentType , AComponent> components ) {
 		this.components.putAll( components ) ;
 	}
 	public void setType( EntityType type ){
@@ -57,23 +59,23 @@ public class Entity implements Serializable {
 	public void addComponent( AComponent... components  ) {
 		for( AComponent component : components ) {
 			if( component != null ){
-				this.components.put( component.getName() , component ) ;
+				this.components.put( component.getType() , component ) ;
 			}
 		}
 	}
 	
-	public void removeComponent( String name ) {
-		if( components.containsKey( name ) ){
-			components.remove( name ) ;
+	public void removeComponent( ComponentType type ) {
+		if( components.containsKey( type ) ){
+			components.remove( type ) ;
 		}
 	}
 	
-	public AComponent getComponent( String name ) {
-		return components.get( name ) ;
+	public AComponent getComponent( ComponentType type ) {
+		return components.get( type ) ;
 	}
 	
-	public boolean hasComponent( String name ) {
-		return components.containsKey( name ) ;
+	public boolean hasComponent( ComponentType type ) {
+		return components.containsKey( type ) ;
 	}
 	
 	@Override
