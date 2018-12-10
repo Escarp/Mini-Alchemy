@@ -61,4 +61,8 @@ public class GameTerminal {
 	public KeyStroke getInput() throws IOException {
 		return screen.readInput() ;
 	}
+
+	public void drawCharAt( char character , int x , int y ) {
+		screen.setCharacter( x , y , new TextCharacter( character ) ) ;
+	}
 }

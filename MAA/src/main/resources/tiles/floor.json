@@ -1,0 +1,6 @@
+{
+	"name" : "floor" ,
+	"passable" : true ,
+	"walkable" : true ,
+	"character" : "."
+} 

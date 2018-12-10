@@ -1,0 +1,6 @@
+{
+	"name" : "wall" ,
+	"passable" : false ,
+	"walkable" : false ,
+	"character" : "#"
+} 
