@@ -2,10 +2,20 @@ package model.map;
 
 import java.util.ArrayList;
 
+import model.DAO.builder.EntityBuilder;
 import model.DAO.loader.TileLoader;
+import util.EntityUtils.EntityType;
 
 public class EmptyMap extends AMap {
+	//Constructors
+	public EmptyMap() {
+		EntityBuilder eb = new EntityBuilder() ;
+		
+		entities = new ArrayList<>() ;
+		entities.add( eb.createEntity( EntityType.PLAYER ) ) ;
+	}
 	
+	//Methods
 	@Override
 	public void generateMap( int width , int height ) {
 		map = new ArrayList<>() ;

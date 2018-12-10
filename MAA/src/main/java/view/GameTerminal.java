@@ -42,6 +42,7 @@ public class GameTerminal {
 	}
 	
 	public void refreshScreen() throws IOException {
+		//refresh screen
 		screen.refresh() ;
 	}
 	
@@ -64,5 +65,10 @@ public class GameTerminal {
 
 	public void drawCharAt( char character , int x , int y ) {
 		screen.setCharacter( x , y , new TextCharacter( character ) ) ;
+	}
+	
+	@Override
+	public String toString() {
+		return "GameTerminal[screen=" + screen.getTerminalSize() + "]" ;
 	}
 }

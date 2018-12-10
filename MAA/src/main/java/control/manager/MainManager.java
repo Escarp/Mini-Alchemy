@@ -1,60 +1,54 @@
 package control.manager;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Properties;
 
 import control.Main;
-import model.DAO.builder.EntityBuilder;
-import model.entity.Entity;
-import util.EntityUtils.EntityType;
 import view.Debug;
 import view.GameTerminal;
 
 public class MainManager {
 	private SystemsManager systemsManager ;
 	private MapManager mapManager ;
-	ArrayList<Entity> entities ;
-	GameTerminal gTerminal ;
-	
+	private GameTerminal gTerminal ;
 	private String artifactId ;
 	private String version ;
 	private int screenWidth ;
 	private int screenHeight ;
+	private int currentLevel ;
 	
 	public MainManager() {
-		systemsManager = new SystemsManager() ;
-		mapManager = new MapManager() ;
+		systemsManager	= new SystemsManager() ;
+		mapManager		= new MapManager() ;
+		
+		currentLevel = 0 ;
 		
 		initProperties() ;
 		initTerminal() ;
 		
 		systemsManager.init( gTerminal ) ;
-
-		EntityBuilder eb = new EntityBuilder() ;
-		
-		entities = new ArrayList<>() ;
-		entities.add( eb.createEntity( EntityType.PLAYER ) ) ;
 	}
 	
 	
 	
 	private void initTerminal() {
-		//Create screen
+		Debug.logln( "initTerminal : [Start]" ) ;
 		try {
+			//Create screen
 			gTerminal = new GameTerminal( 
 					artifactId + " " + version , screenWidth , screenHeight ) ;
+			Debug.logln( "initTerminal : " + gTerminal.toString() ) ;
 		}
 		catch( IOException e ) {
 			Debug.logErr( "MainManager : initTerminal" , e ) ;
 		}
+		Debug.logln( "initTerminal : [End]" ) ;
 	}
-
-
 
 	public void initProperties() {
 		Debug.logln( "initProperties : [Start]" ) ;
 		Properties properties = new Properties() ;
+		
 		try {
 			properties.load( Main.class.getClassLoader().getResourceAsStream( 
 					"application.properties" ) ) ;
@@ -78,7 +72,9 @@ public class MainManager {
 		boolean running = false ;
 		
 		try {
-			running = systemsManager.input( entities , gTerminal.getInput() ) ;
+			running = systemsManager.input( 
+					mapManager.getLevels().get( currentLevel ).getEntities() , 
+					gTerminal.getInput() ) ;
 		}
 		catch( IOException e ) {
 			Debug.logErr( "MainManager : input" , e ) ;
@@ -92,8 +88,9 @@ public class MainManager {
 			//Wipe screen : WARNING : this NEEDS to be here before everything!
 			gTerminal.wipeScreen() ;
 			
-			mapManager.draw( gTerminal , 0 ) ;
-			systemsManager.draw( entities ) ;
+			mapManager.draw( gTerminal , currentLevel ) ;
+			systemsManager.draw( 
+					mapManager.getLevels().get( currentLevel ).getEntities() ) ;
 			
 			//Refresh screen : WARNING : this NEEDS to be here after everything!
 			gTerminal.refreshScreen() ;
@@ -101,8 +98,6 @@ public class MainManager {
 		catch( IOException e ) {
 			Debug.logErr( "MainManager : draw" , e ) ;
 		}
-		
-		
 	}
 	
 	public void update() {
