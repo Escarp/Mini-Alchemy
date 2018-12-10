@@ -32,7 +32,7 @@ public class TileLoader extends AJSONLoader<Tile> {
 					json.getString( "character" ).charAt( 0 ) ) ;
 		}
 		catch( Exception e ) {
-			Debug.logErr( "Tile : load" , e ) ;
+			Debug.logErr( "TileLoader : load" , e ) ;
 		}
 		return null ;
 	}

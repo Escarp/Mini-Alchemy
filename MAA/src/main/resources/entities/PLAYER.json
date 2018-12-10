@@ -9,12 +9,8 @@
 			{
 				"type" : "RENDER" ,
 				"character" : "@" ,
-				"fr" : 255 ,
-				"fg" : 255 ,
-				"fb" : 255 ,
-				"br" : 0 ,
-				"bg" : 0 ,
-				"bb" : 0 
+				"fr" : 255 ,	"fg" : 255 ,	"fb" : 255 ,
+				"br" : 0 ,		"bg" : 0 ,		"bb" : 0 
 			} ,
 			{
 				"type" : "VELOCITY" ,

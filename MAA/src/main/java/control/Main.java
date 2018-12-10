@@ -6,15 +6,18 @@ import view.Debug;
 public class Main {
 	
 	/*
-	 * Todo list :
-	 * TODO : Camera ( to re-adapt from master )
-	 * TODO : FOV ( to copy from master )
-	 * TODO : Path finding ( 1% done )
-	 * TODO : Monsters ( 80% done )
-	 * TODO : Combat ( 10% done )
-	 * TODO : Items ( 80% done )
-	 * TODO : GUI ( 20% done )
-	 * TODO : Saving ( 50% done )
+	 * To-do list :
+	 * 
+	 * TODO : Camera		( to	re-adapt from master )
+	 * TODO : FOV			( to	copy from master )
+	 * TODO : Path finding	( 1%	done )
+	 * TODO : Monsters		( 80%	done )
+	 * TODO : Combat		( 10%	done )
+	 * TODO : Items			( 80%	done )
+	 * TODO : GUI			( 20%	done )
+	 * TODO : Saving		( 50%	done )
+	 * 
+	 * also remove the tile class and use entities?
 	 */
 	
 	public static void main( String[] args ){

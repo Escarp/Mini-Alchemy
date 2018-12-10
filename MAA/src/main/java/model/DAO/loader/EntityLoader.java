@@ -74,7 +74,7 @@ public class EntityLoader extends AJSONLoader<Entity> {
 			}
 		}
 		catch( Exception e ) {
-			Debug.logErr( "Tile : load" , e ) ;
+			Debug.logErr( "EntityLoader : load" , e ) ;
 		}
 		return entity ;
 	}
