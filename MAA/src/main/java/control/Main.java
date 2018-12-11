@@ -8,6 +8,8 @@ public class Main {
 	/*
 	 * To-do list :
 	 * 
+	 * DONE : Player
+	 * DONE : Maps
 	 * TODO : Camera		( to	re-adapt from master )
 	 * TODO : FOV			( to	copy from master )
 	 * TODO : Path finding	( 1%	done )

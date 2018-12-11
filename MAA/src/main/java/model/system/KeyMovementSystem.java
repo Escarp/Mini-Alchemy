@@ -1,16 +1,20 @@
 package model.system;
 
+import java.util.ArrayList;
+
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 
 import model.component.AComponent;
 import model.component.Position;
 import model.component.Velocity;
+import model.map.tile.Tile;
 import util.ButtonUtils;
 import util.SystemsUtils.SystemType;
 
 public class KeyMovementSystem extends ASystem {
 	private KeyStroke input ;
+	private ArrayList<ArrayList<Tile>> map ;
 	
 	//Getters
 	public KeyStroke getInput() {
@@ -20,6 +24,9 @@ public class KeyMovementSystem extends ASystem {
 	//Setters
 	public void setInput( KeyStroke input ) {
 		this.input = input;
+	}
+	public void setMap( ArrayList<ArrayList<Tile>> map ) {
+		this.map = map ;
 	}
 
 	//Constructors
@@ -44,7 +51,7 @@ public class KeyMovementSystem extends ASystem {
 				}
 			}
 			
-			if( position != null && velocity != null ){
+			if( position != null && velocity != null ) {
 				//Decide the direction
 				boolean right = 
 						ButtonUtils.isButtonPressed( 
@@ -78,9 +85,30 @@ public class KeyMovementSystem extends ASystem {
 						velocity.getyVel() + 
 						( ( down ? 1 : 0 ) - ( up ? 1 : 0 )  ) ) ;
 				
-				//Set the position
-				position.setX( position.getX() + velocity.getxVel() ) ;
-				position.setY( position.getY() + velocity.getyVel() ) ;
+				//Set the direction
+				int dirX = ( right	? 1 : 0 ) - ( left	? 1 : 0 ) ;
+				int dirY = ( down	? 1 : 0 ) - ( up	? 1 : 0 ) ;
+				
+				//Check for collisions
+				int targetX = position.getX() + velocity.getxVel() ;
+				int targetY = position.getY() + velocity.getyVel() ;
+				
+				//Set 
+				int distance = (int)Math.sqrt( 
+						Math.pow( ( targetX - position.getX() ) , 2 ) + 
+						Math.pow( ( targetY - position.getY() ) , 2 ) ) ;
+				
+				for( int i = 0 ; i < distance ; i++ ) {
+					if( 	map.get( position.getY() + dirY )
+									.get( position.getX() + dirX )
+									.isPassable() 
+							&& map.get( position.getY() + dirY )
+									.get( position.getX() + dirX )
+									.isWalkable() ){
+						position.setX( position.getX() + dirX ) ;
+						position.setY( position.getY() + dirY ) ;
+					}
+				}
 				
 				//Set velocity back to 0
 				velocity.setxVel( 0 ) ;
@@ -88,5 +116,4 @@ public class KeyMovementSystem extends ASystem {
 			}
 		}
 	}
-	
 }

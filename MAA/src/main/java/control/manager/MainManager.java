@@ -102,7 +102,8 @@ public class MainManager {
 	}
 	
 	public void update() {
-		//To fill :3
+		systemsManager.setMap( 
+				mapManager.getLevels().get( currentLevel ).getMap() ) ;
 	}
 	
 	public void stop() {

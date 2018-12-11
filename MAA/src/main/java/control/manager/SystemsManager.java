@@ -7,6 +7,7 @@ import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 
 import model.entity.Entity;
+import model.map.tile.Tile;
 import model.system.ASystem;
 import model.system.GraphicsSystem;
 import model.system.KeyMovementSystem;
@@ -18,6 +19,11 @@ import view.GameTerminal;
 
 public class SystemsManager {
 	private HashMap<SystemType , ASystem> systems ;
+	private ArrayList<ArrayList<Tile>> map ;
+	
+	public void setMap( ArrayList<ArrayList<Tile>> map ) {
+		this.map = map ;
+	}
 	
 	public SystemsManager() {
 		systems = new HashMap<>() ;
@@ -60,9 +66,11 @@ public class SystemsManager {
 							( KeyMovementSystem )systems.get( 
 									SystemType.KEY_MOVEMENT ) ;
 					kms.setInput( input ) ;
+					kms.setMap( map ) ;
 					kms.update( 
 							entity.getComponent( ComponentType.POSITION ) ,
-							entity.getComponent( ComponentType.VELOCITY ) 
+							entity.getComponent( ComponentType.VELOCITY ) ,
+							entity.getComponent( ComponentType.SOLID )
 							) ;
 				}
 			}
