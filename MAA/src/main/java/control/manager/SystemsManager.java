@@ -1,8 +1,8 @@
 package control.manager;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
-
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 
@@ -37,7 +37,7 @@ public class SystemsManager {
 						new KeyMovementSystem() ) ;
 	}
 	
-	public void draw( ArrayList<Entity> entities ) {
+	public void draw( Collection<Entity> entities ) {
 		//Check if the system got deleted
 		if( systems.containsKey( SystemType.GRAPHICS ) ) {
 			for( Entity entity : entities ){
@@ -49,7 +49,7 @@ public class SystemsManager {
 		}
 	}
 	
-	public boolean input( ArrayList<Entity> entities , KeyStroke input ) {
+	public boolean input( Collection<Entity> entities , KeyStroke input ) {
 		boolean running = true ;
 		//Exit condition
 		if( ButtonUtils.areButtonsPressed( 

@@ -3,6 +3,10 @@ package control.manager;
 import java.util.Properties;
 
 import control.Main;
+import model.component.Position;
+import model.entity.Entity;
+import util.ComponentUtils.ComponentType;
+import util.EntityUtils.EntityType;
 import view.Debug;
 import view.GameTerminal;
 
@@ -73,7 +77,8 @@ public class MainManager {
 			//Get the input from the screen ( blocking ) and pass it to 
 			//the systems for processsing
 			running = systemsManager.input( 
-					mapManager.getLevels().get( currentLevel ).getEntities() , 
+					mapManager.getLevels().get( currentLevel ).getEntities()
+							.values() , 
 					gTerminal.getInput() ) ;
 		}
 		catch( Exception e ) {
@@ -87,11 +92,45 @@ public class MainManager {
 			//Wipe screen : WARNING : this NEEDS to be here before everything!
 			gTerminal.wipeScreen() ;
 			
-			//Draw map
-			mapManager.draw( gTerminal , currentLevel ) ;
-			//Draw entities
-			systemsManager.draw( 
-					mapManager.getLevels().get( currentLevel ).getEntities() ) ;
+			int minX = gTerminal.getMinXIndex() ;
+			int minY = gTerminal.getMinYIndex() ;
+			
+			int maxX = gTerminal.getMaxXIndex() ;
+			int maxY = gTerminal.getMaxYIndex() ;
+			
+			int index = minX ;
+			
+			for(	int y = screenHeight / 4 ; 
+					y < screenHeight - ( screenHeight / 4 ) ; y++ ) {
+				index = minX ;
+				for( int x = 0 ; x < screenWidth - ( screenWidth / 5 ) ; x++ ) {
+					if( index < maxX && minY < maxY ) {
+						mapManager.draw( 
+								gTerminal , 
+								currentLevel , 
+								x , 
+								y ,
+								index , 
+								minY ) ;
+						
+						index++ ;
+						
+						for( Entity entity : 
+									mapManager.getLevels().get( currentLevel )
+										.getEntities().values() ){
+							if( 	( (Position)entity.getComponent( 
+											ComponentType.POSITION ) )
+											.getX() == index && 
+									( (Position)entity.getComponent( 
+											ComponentType.POSITION ) )
+											.getY() == minY ){
+								//FIXME : draw wntities
+							}
+						}
+					}
+				}
+				minY++ ;
+			}
 			
 			//Refresh screen : WARNING : this NEEDS to be here after everything!
 			gTerminal.refreshScreen() ;
@@ -103,6 +142,12 @@ public class MainManager {
 	
 	public void update() {
 		systemsManager.setMap( 
+				mapManager.getLevels().get( currentLevel ).getMap() ) ;
+		gTerminal.setPosition( ( Position )mapManager
+				.getLevels().get( currentLevel )
+				.getEntities().get( EntityType.PLAYER )
+				.getComponent( ComponentType.POSITION ) ) ;
+		gTerminal.calculateIndexes( 
 				mapManager.getLevels().get( currentLevel ).getMap() ) ;
 	}
 	

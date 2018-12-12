@@ -1,19 +1,21 @@
 package model.map;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import model.entity.Entity;
 import model.map.tile.Tile;
+import util.EntityUtils.EntityType;
 
 public abstract class AMap {
 	protected ArrayList<ArrayList<Tile>> map ;
-	protected ArrayList<Entity> entities ;
+	protected HashMap<EntityType , Entity> entities ;
 
 	//Getters
 	public ArrayList<ArrayList<Tile>> getMap() {
 		return map;
 	}
-	public ArrayList<Entity> getEntities() {
+	public HashMap<EntityType , Entity> getEntities() {
 		return entities ;
 	}
 

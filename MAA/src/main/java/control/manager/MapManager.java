@@ -24,8 +24,14 @@ public class MapManager {
 		levels.get( 0 ).generateMap( 100 , 40 ) ;
 	}
 	
-	public void draw( GameTerminal terminal , int level ) {
-		for( int y = 0 ; y < levels.get( level ).getMap().size() ; y++ ) {
+	public void draw( 
+			GameTerminal terminal , 
+			int level , 
+			int x , 
+			int y , 
+			int indX , 
+			int indY ) {
+		/*for( int y = 0 ; y < levels.get( level ).getMap().size() ; y++ ) {
 			for(	int x = 0 ; 
 					x < levels.get( level ).getMap().get( 0 ).size() ; 
 					x++ ) {
@@ -39,6 +45,12 @@ public class MapManager {
 						x , 
 						y ) ;
 			}
-		}
+		}*/
+		terminal.drawCharAt( 
+				levels.get( level )
+						.getMap()
+						.get( indY )
+						.get( indY )
+						.getCharacter() , x , y ) ;
 	}
 }

@@ -1,9 +1,11 @@
 package model.map;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import model.DAO.builder.EntityBuilder;
 import model.DAO.loader.TileLoader;
+import model.entity.Entity;
 import util.EntityUtils.EntityType;
 
 public class EmptyMap extends AMap {
@@ -11,8 +13,8 @@ public class EmptyMap extends AMap {
 	public EmptyMap() {
 		EntityBuilder eb = new EntityBuilder() ;
 		
-		entities = new ArrayList<>() ;
-		entities.add( eb.loadEntity( EntityType.PLAYER ) ) ;
+		entities = new HashMap<EntityType , Entity>() ;
+		entities.put( EntityType.PLAYER , eb.loadEntity( EntityType.PLAYER ) ) ;
 	}
 	
 	//Methods
