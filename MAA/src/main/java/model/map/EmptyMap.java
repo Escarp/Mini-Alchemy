@@ -35,5 +35,4 @@ public class EmptyMap extends AMap {
 			}
 		}
 	}
-	
 }

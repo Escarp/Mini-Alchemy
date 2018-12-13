@@ -119,9 +119,12 @@ public class GameTerminal {
 		screen.startScreen() ;
 		screen.setCursorPosition( null ) ;
 		
+		posX = 0 ;
+		posY = 0 ;
+		
 		//Set the dimensions : to put in properties?
-		dimX = ( (int)( width / 5 ) ) * 4 + 5 ;
-		dimY = ( (int)( height / 4 ) ) * 2 ;
+		dimX = width - ( width / 5 ) ;
+		dimY = height / 2 ;
 		
 		//Set the position and indices
 		minXIndex = 0 ;
@@ -165,8 +168,8 @@ public class GameTerminal {
 	}
 	
 	public void setPosition( Position pos ) {
-		posX = pos.getX() - ( dimX / 2 ) ;
-		posY = pos.getY() - ( dimY / 2 ) ;
+		posX = (int)( pos.getX() - ( dimX / 2 ) ) ;
+		posY = (int)( pos.getY() - ( dimY / 2 ) ) ;
 	}
 	
 	public void calculateIndexes( ArrayList<ArrayList<Tile>> map ) {
@@ -186,7 +189,7 @@ public class GameTerminal {
 		}
 		
 		//Max Indexes
-		if( posX + dimX > map.get( 0 ).size() ) {
+		if( ( posX + dimX ) > map.get( 0 ).size() ) {
 			maxXIndex = map.get( 0 ).size() ;
 		}
 		else {

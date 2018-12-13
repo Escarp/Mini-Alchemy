@@ -4,6 +4,7 @@ import java.util.Properties;
 
 import control.Main;
 import model.component.Position;
+import model.component.Render;
 import model.entity.Entity;
 import util.ComponentUtils.ComponentType;
 import util.EntityUtils.EntityType;
@@ -98,38 +99,41 @@ public class MainManager {
 			int maxX = gTerminal.getMaxXIndex() ;
 			int maxY = gTerminal.getMaxYIndex() ;
 			
-			int index = minX ;
+			int indX = minX ;
+			int indY = minY ;
 			
 			for(	int y = screenHeight / 4 ; 
 					y < screenHeight - ( screenHeight / 4 ) ; y++ ) {
-				index = minX ;
+				indX = minX ;
 				for( int x = 0 ; x < screenWidth - ( screenWidth / 5 ) ; x++ ) {
-					if( index < maxX && minY < maxY ) {
+					if( indX < maxX && indY < maxY ) {
 						mapManager.draw( 
 								gTerminal , 
 								currentLevel , 
 								x , 
 								y ,
-								index , 
-								minY ) ;
-						
-						index++ ;
+								indX , 
+								indY ) ;
 						
 						for( Entity entity : 
 									mapManager.getLevels().get( currentLevel )
 										.getEntities().values() ){
 							if( 	( (Position)entity.getComponent( 
 											ComponentType.POSITION ) )
-											.getX() == index && 
+											.getX() == indX && 
 									( (Position)entity.getComponent( 
 											ComponentType.POSITION ) )
-											.getY() == minY ){
-								//FIXME : draw wntities
+											.getY() == indY ){
+								gTerminal.drawCharAt( 
+										( (Render)entity.getComponent( 
+												ComponentType.RENDER ) )
+										.getCharacter() , x , y );
 							}
 						}
 					}
+					indX++ ;
 				}
-				minY++ ;
+				indY++ ;
 			}
 			
 			//Refresh screen : WARNING : this NEEDS to be here after everything!

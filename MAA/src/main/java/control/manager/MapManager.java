@@ -31,26 +31,11 @@ public class MapManager {
 			int y , 
 			int indX , 
 			int indY ) {
-		/*for( int y = 0 ; y < levels.get( level ).getMap().size() ; y++ ) {
-			for(	int x = 0 ; 
-					x < levels.get( level ).getMap().get( 0 ).size() ; 
-					x++ ) {
-				//Pass char and position to the screen
-				terminal.drawCharAt( 
-						levels.get( level )
-								.getMap()
-								.get( y )
-								.get( x )
-								.getCharacter() , 
-						x , 
-						y ) ;
-			}
-		}*/
 		terminal.drawCharAt( 
 				levels.get( level )
 						.getMap()
 						.get( indY )
-						.get( indY )
+						.get( indX )
 						.getCharacter() , x , y ) ;
 	}
 }
