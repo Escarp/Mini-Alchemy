@@ -16,6 +16,14 @@
 				"type" : "VELOCITY" ,
 				"velX" : 0 ,
 				"velY" : 0
+			} ,
+			{
+				"type" : "SOLID" ,
+				"solid" : true
+			} ,
+			{
+				"type" : "LIGHT" ,
+				"radius" : 6
 			}
 	]
 }

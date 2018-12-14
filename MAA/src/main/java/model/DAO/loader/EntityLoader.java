@@ -9,8 +9,10 @@ import org.json.JSONTokener;
 import com.googlecode.lanterna.TextColor;
 
 import control.Main;
+import model.component.Light;
 import model.component.Position;
 import model.component.Render;
+import model.component.Solid;
 import model.component.Velocity;
 import model.entity.Entity;
 import util.ComponentUtils.ComponentType;
@@ -67,6 +69,18 @@ public class EntityLoader extends AJSONLoader<Entity> {
 						entity.addComponent( rend ) ;
 						break ;
 					}
+					case SOLID : {
+						Solid sol = new Solid() ;
+						sol.setSolid( cmp.getBoolean( "solid" ) ) ;
+						entity.addComponent( sol ) ;
+						break ;
+					}
+					case LIGHT : {
+						Light light = new Light() ;
+						light.setRadius( cmp.getInt( "radius" ) ) ;
+						entity.addComponent( light ) ;
+						break ;
+					}
 					default : {
 						break ;
 					}
@@ -76,6 +90,10 @@ public class EntityLoader extends AJSONLoader<Entity> {
 		catch( Exception e ) {
 			Debug.logErr( "EntityLoader : load" , e ) ;
 		}
+		
+		Debug.logDebug( "loaded : " + entity + " \n"
+				+ "\t\tfrom : " + name ) ;
+		
 		return entity ;
 	}
 	

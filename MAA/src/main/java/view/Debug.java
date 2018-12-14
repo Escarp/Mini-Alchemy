@@ -16,6 +16,10 @@ public class Debug {
 		System.out.println( msg ) ;
 	}
 	
+	public static void logDebug( String msg ) {	
+		logln( "[DEBUG] : " + msg ) ;
+	}
+	
 	public static void logErr( String name , Exception e ) {
 		logln( "[Error] : " + name + " : " + e.getMessage() ) ;
 		log( "[Stack] : \n" ) ;

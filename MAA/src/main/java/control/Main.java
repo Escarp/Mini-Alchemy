@@ -12,7 +12,7 @@ public class Main {
 	 * DONE : Maps
 	 * DONE : Camera
 	 * TODO : FOV			( to	copy from master )
-	 * TODO : Path finding	( 1%	done )
+	 * TODO : Path finding	( 10%	done )
 	 * TODO : Monsters		( 80%	done )
 	 * TODO : Combat		( 10%	done )
 	 * TODO : Items			( 80%	done )
@@ -28,7 +28,7 @@ public class Main {
 		boolean running = true ;
 		
 		//Main loop
-		Debug.logln( "MainLoop : [Start]" );
+		Debug.logDebug( "MainLoop : [Start]" );
 		do {
 			//Update
 			mm.update() ;
@@ -42,6 +42,6 @@ public class Main {
 		while( running ) ;
 		//End of the road
 		mm.stop() ;
-		Debug.logln( "MainLoop : [End]" );
+		Debug.logDebug( "MainLoop : [End]" );
 	}
 }
