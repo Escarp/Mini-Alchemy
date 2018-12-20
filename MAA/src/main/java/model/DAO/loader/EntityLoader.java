@@ -1,14 +1,20 @@
 package model.DAO.loader;
 
-import java.net.URI;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.json.JSONTokener;
 
 import com.googlecode.lanterna.TextColor;
 
-import control.Main;
 import model.component.Light;
 import model.component.Position;
 import model.component.Render;
@@ -20,19 +26,99 @@ import util.EntityUtils.EntityType;
 import view.Debug;
 
 public class EntityLoader extends AJSONLoader<Entity> {
+	private HashMap<EntityType , Entity> entities ;
+	public static final String FOLDER = "entities" ;
+	
+	//Getters
+	public HashMap<EntityType , Entity> getEntities() {
+		return entities;
+	}
 
+	//Setters
+	public void setEntities( HashMap<EntityType , Entity> entities ) {
+		this.entities = entities;
+	}
+	
+	public EntityLoader() {
+		entities = new HashMap<EntityType , Entity>() ;
+		final File jarFile = new File( 
+				getClass()
+				.getProtectionDomain()
+				.getCodeSource()
+				.getLocation()
+				.getPath() ) ;
+		
+		try {
+			if( jarFile.isFile() ) {
+				final JarFile jar = new JarFile( jarFile ) ;
+				final Enumeration<JarEntry> entries = jar.entries() ;
+				while( entries.hasMoreElements() ) {
+					final String name = entries.nextElement().getName() ;
+					if(		name.startsWith( FOLDER + "/" ) && 
+							name.endsWith( ".json" ) ) {
+						Entity entity = load( "/" + name ) ;
+						entities.put( entity.getType() , entity ) ;
+					}
+				}
+				jar.close() ;
+			}
+			else {
+				final URL url = getClass().getResource( "/" + FOLDER ) ;
+				if( url != null ) {
+					final File files = new File( url.toURI() ) ;
+					for( File f : files.listFiles() ) {
+						Entity entity = load( 
+								"/" + FOLDER + "/" + f.getName() ) ;
+						entities.put( entity.getType() , entity ) ;
+					}
+				}
+			}
+		}
+		catch( Exception e ) {
+			Debug.logErr( "EntityLoader : constructor" , e );
+		}
+		
+		
+		//loadAll() ;
+	}
+	
+//	public void loadAll() {
+//		InputStreamReader isr = new InputStreamReader( 
+//				folder , StandardCharsets.UTF_8 ) ;
+//		BufferedReader br = new BufferedReader( isr ) ;
+//		
+//		Entity entity = null ;
+//		String s = null ;
+//		try {
+//			while( ( s = br.readLine() ) != null ) {
+//				entity = load( s ) ;
+//				entities.put( entity.getType() , entity ) ;
+//			}
+//			br.close() ;
+//			isr.close() ;
+//			folder.close() ;
+//		}
+//		catch( Exception e ) {
+//			Debug.logErr( "EntityLoader : loadAll" , e ) ;
+//		}
+//		
+//		Debug.logDebug( 
+//				"EntityLoader : loaded " + entities.size() + " entities" ) ;
+//	}
+	
 	@Override
 	public Entity load( String name ) {
 		Entity entity = new Entity() ;
 		try {
-			//Modify the name and create url from it
-			name = Main.class.getClassLoader().getResource( 
-					"entities/" + name + ".json" ).toString() ;
-			URI uri = new URI( name ) ;
+			InputStream is = getClass().getResourceAsStream( name ) ;
+			Debug.logDebug( "is:" + is.toString() ) ;
+			InputStreamReader isr = new InputStreamReader( is ) ;
+			BufferedReader br = new BufferedReader( isr ) ;
 			
-			//Create tokener to build the JSONObject with
-			JSONTokener tokener = new JSONTokener( uri.toURL().openStream() ) ;
-			JSONObject json = new JSONObject( tokener ) ;
+			StringBuilder sb = new StringBuilder() ;
+			br.lines().forEach( l -> sb.append( l ) ) ;
+			
+			JSONObject json = new JSONObject( sb.toString() ) ;
 			
 			entity.setType( EntityType.valueOf( json.getString( "type" ) ) ) ;
 			
@@ -91,8 +177,8 @@ public class EntityLoader extends AJSONLoader<Entity> {
 			Debug.logErr( "EntityLoader : load" , e ) ;
 		}
 		
-		Debug.logDebug( "loaded : " + entity + " \n"
-				+ "\t\tfrom : " + name ) ;
+		Debug.logDebug( "EntityLoader : loaded : " + entity + " \n"
+				+ "\t\t\t from : " + name ) ;
 		
 		return entity ;
 	}

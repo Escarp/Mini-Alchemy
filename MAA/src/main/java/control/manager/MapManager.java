@@ -3,7 +3,7 @@ package control.manager;
 import java.util.ArrayList;
 
 import model.map.AMap;
-import model.map.EmptyMap;
+import model.map.DrunkMap;
 import view.GameTerminal;
 
 public class MapManager {
@@ -20,8 +20,8 @@ public class MapManager {
 	public MapManager() {
 		//Generate empty map and add player : Warning : to be changed
 		levels = new ArrayList<>() ;
-		levels.add( new EmptyMap() ) ;
-		levels.get( 0 ).generateMap( 100 , 40 ) ;
+		levels.add( new DrunkMap() ) ;
+		levels.get( 0 ).generateMap( 200 , 200 ) ;
 	}
 	
 	public void draw( 

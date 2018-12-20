@@ -1,5 +1,5 @@
 {
-	"name" : "wall" ,
+	"type" : "wall" ,
 	"passable" : false ,
 	"walkable" : false ,
 	"character" : "#"

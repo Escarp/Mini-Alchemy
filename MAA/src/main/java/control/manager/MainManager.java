@@ -2,10 +2,14 @@ package control.manager;
 
 import java.util.Properties;
 
+import com.googlecode.lanterna.input.KeyStroke;
+import com.googlecode.lanterna.input.KeyType;
+
 import control.Main;
 import model.component.Position;
 import model.component.Render;
 import model.entity.Entity;
+import util.ButtonUtils;
 import util.ComponentUtils.ComponentType;
 import util.EntityUtils.EntityType;
 import view.Debug;
@@ -73,10 +77,19 @@ public class MainManager {
 		try {
 			//Get the input from the screen ( blocking ) and pass it to 
 			//the systems for processsing
+			KeyStroke input = gTerminal.getInput() ;
+			
 			running = systemsManager.input( 
 					mapManager.getLevels().get( currentLevel ).getEntities()
-							.values() , 
-					gTerminal.getInput() ) ;
+							.values() , input
+					 ) ;
+			
+			//Exit condition
+			if( ButtonUtils.areButtonsPressed( 
+					input , KeyType.Escape , KeyType.EOF ) ) {
+				running = false ;
+				return running ;
+			}
 		}
 		catch( Exception e ) {
 			Debug.logErr( "MainManager : input" , e ) ;

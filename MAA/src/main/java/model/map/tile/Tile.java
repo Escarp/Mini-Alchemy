@@ -37,8 +37,9 @@ public class Tile {
 	//Constructors
 	public Tile() {
 		type = "VOID" ;
-		passable = true ;
-		walkable = true ;
+		passable = false ;
+		walkable = false ;
+		character = ' ' ;
 	}
 	
 	public Tile( 

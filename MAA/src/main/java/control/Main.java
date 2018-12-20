@@ -10,7 +10,6 @@ public class Main {
 	 * 
 	 * DONE : Player
 	 * DONE : Maps
-	 * DONE : Camera
 	 * TODO : FOV			( to	copy from master )
 	 * TODO : Path finding	( 10%	done )
 	 * TODO : Monsters		( 80%	done )

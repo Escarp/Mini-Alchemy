@@ -3,15 +3,14 @@ package control.manager;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+
 import com.googlecode.lanterna.input.KeyStroke;
-import com.googlecode.lanterna.input.KeyType;
 
 import model.entity.Entity;
 import model.map.tile.Tile;
 import model.system.ASystem;
 import model.system.GraphicsSystem;
 import model.system.KeyMovementSystem;
-import util.ButtonUtils;
 import util.ComponentUtils.ComponentType;
 import util.EntityUtils.EntityType;
 import util.SystemsUtils.SystemType;
@@ -51,12 +50,6 @@ public class SystemsManager {
 	
 	public boolean input( Collection<Entity> entities , KeyStroke input ) {
 		boolean running = true ;
-		//Exit condition
-		if( ButtonUtils.areButtonsPressed( 
-				input , KeyType.Escape , KeyType.EOF ) ) {
-			running = false ;
-			return running ;
-		}
 		//Update entities that have to move with key inputs like the player
 		if( systems.containsKey( SystemType.KEY_MOVEMENT ) ) {
 			for( Entity entity : entities ){
