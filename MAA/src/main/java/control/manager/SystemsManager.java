@@ -9,7 +9,6 @@ import com.googlecode.lanterna.input.KeyStroke;
 import model.entity.Entity;
 import model.map.tile.Tile;
 import model.system.ASystem;
-import model.system.GraphicsSystem;
 import model.system.KeyMovementSystem;
 import util.ComponentUtils.ComponentType;
 import util.EntityUtils.EntityType;
@@ -30,22 +29,8 @@ public class SystemsManager {
 	
 	public void init( GameTerminal terminal ) {
 		//Add all the systems
-		systems.put(	SystemType.GRAPHICS , 
-						new GraphicsSystem( terminal ) ) ;
 		systems.put(	SystemType.KEY_MOVEMENT , 
 						new KeyMovementSystem() ) ;
-	}
-	
-	public void draw( Collection<Entity> entities ) {
-		//Check if the system got deleted
-		if( systems.containsKey( SystemType.GRAPHICS ) ) {
-			for( Entity entity : entities ){
-				//For each entity pass the position and render to the screen
-				systems.get( SystemType.GRAPHICS ).update( 
-						entity.getComponent( ComponentType.POSITION ) , 
-						entity.getComponent( ComponentType.RENDER ) ) ;
-			}
-		}
 	}
 	
 	public boolean input( Collection<Entity> entities , KeyStroke input ) {
