@@ -11,7 +11,6 @@ import model.entity.Entity;
 import model.map.tile.Tile;
 import util.ComponentUtils.ComponentType;
 import util.EntityUtils.EntityType;
-import view.Debug;
 
 public class DrunkMap extends AMap {
 	
@@ -75,23 +74,6 @@ public class DrunkMap extends AMap {
 		}
 		
 		while( steps > 0 ) {
-			
-			if( steps == 1000 ) {
-				Debug.logDebug( "Generating map : 0%" );
-			}
-			else if( steps == 750 ) {
-				Debug.logDebug( "Generating map : 25%" );
-			}
-			else if( steps == 500 ) {
-				Debug.logDebug( "Generating map : 50%" );
-			}
-			else if( steps == 250 ) {
-				Debug.logDebug( "Generating map : 75%" );
-			}
-			else if( steps == 1 ) {
-				Debug.logDebug( "Generating map : 100%" );
-			}
-			
 			steps-- ;
 			
 			if( curX >= width ) {
@@ -136,11 +118,8 @@ public class DrunkMap extends AMap {
 			curX += curDirX ;
 			curY += curDirY ;
 		}
-		
-		Debug.logDebug( "Generating walls..." ) ;
-		
-		for( int y = 1 ; y < height - 1 ; y++ ) {
-			for( int x = 1 ; x < width - 1 ; x++ ) {
+		for( int y = 1 ; y < height ; y++ ) {
+			for( int x = 1 ; x < width ; x++ ) {
 				if( map.get( y ).get( x ).getType().equals( "floor" ) ) {
 					if( map.get( y + 1 ).get( x + 1 ).getType().equals( 
 							"VOID" ) ) {

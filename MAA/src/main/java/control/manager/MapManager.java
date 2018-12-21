@@ -21,7 +21,7 @@ public class MapManager {
 		//Generate empty map and add player : Warning : to be changed
 		levels = new ArrayList<>() ;
 		levels.add( new DrunkMap() ) ;
-		levels.get( 0 ).generateMap( 200 , 200 ) ;
+		levels.get( 0 ).generateMap( 100 , 100 ) ;
 	}
 	
 	public void draw( 
@@ -37,5 +37,9 @@ public class MapManager {
 						.get( indY )
 						.get( indX )
 						.getCharacter() , x , y ) ;
+	}
+
+	public void reload( int currentLevel ) {
+		levels.get( currentLevel ).generateMap( 100 , 100 ) ;
 	}
 }

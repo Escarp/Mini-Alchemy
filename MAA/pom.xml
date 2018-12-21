@@ -8,6 +8,8 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.build.timestamp.format>dd-MM-yyyy</maven.build.timestamp.format>
+		<screen.width>100</screen.width>
+		<screen.height>40</screen.height>
 	</properties>
 	<dependencies>
 		<dependency>

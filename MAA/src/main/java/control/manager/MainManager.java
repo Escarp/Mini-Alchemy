@@ -84,6 +84,10 @@ public class MainManager {
 							.values() , input
 					 ) ;
 			
+			if( ButtonUtils.isButtonPressed( input , 'r' ) ) {
+				mapManager.reload( currentLevel ) ;
+			}
+			
 			//Exit condition
 			if( ButtonUtils.areButtonsPressed( 
 					input , KeyType.Escape , KeyType.EOF ) ) {
