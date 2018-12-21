@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -26,38 +25,32 @@ import util.EntityUtils.EntityType;
 import view.Debug;
 
 public class EntityLoader extends AJSONLoader<Entity> {
-	private HashMap<EntityType , Entity> entities ;
 	public static final String FOLDER = "entities" ;
-	
-	//Getters
-	public HashMap<EntityType , Entity> getEntities() {
-		return entities;
-	}
-
-	//Setters
-	public void setEntities( HashMap<EntityType , Entity> entities ) {
-		this.entities = entities;
-	}
-	
 	public EntityLoader() {
-		entities = new HashMap<EntityType , Entity>() ;
-		final File jarFile = new File( 
-				getClass()
-				.getProtectionDomain()
-				.getCodeSource()
-				.getLocation()
-				.getPath() ) ;
 		
+	}
+	
+	@Override
+	public Entity load( String name ) {
+		Entity entity = new Entity() ;
+		String path = "" ;
 		try {
+			final File jarFile = new File( 
+					getClass()
+					.getProtectionDomain()
+					.getCodeSource()
+					.getLocation()
+					.getPath() ) ;
+			
 			if( jarFile.isFile() ) {
 				final JarFile jar = new JarFile( jarFile ) ;
 				final Enumeration<JarEntry> entries = jar.entries() ;
 				while( entries.hasMoreElements() ) {
-					final String name = entries.nextElement().getName() ;
-					if(		name.startsWith( FOLDER + "/" ) && 
-							name.endsWith( ".json" ) ) {
-						Entity entity = load( "/" + name ) ;
-						entities.put( entity.getType() , entity ) ;
+					path = entries.nextElement().getName() ;
+					if(	path.equals( FOLDER + "/" + name + ".json" ) ) {
+						//Load
+						path = "/" + path ;
+						break ;
 					}
 				}
 				jar.close() ;
@@ -67,51 +60,16 @@ public class EntityLoader extends AJSONLoader<Entity> {
 				if( url != null ) {
 					final File files = new File( url.toURI() ) ;
 					for( File f : files.listFiles() ) {
-						Entity entity = load( 
-								"/" + FOLDER + "/" + f.getName() ) ;
-						entities.put( entity.getType() , entity ) ;
+						//Load
+						if( f.getName().equals( name + ".json" ) ) {
+							path = "/" + FOLDER + "/" + f.getName() ;
+							break ;
+						}
 					}
 				}
 			}
-		}
-		catch( Exception e ) {
-			Debug.logErr( "EntityLoader : constructor" , e );
-		}
-		
-		
-		//loadAll() ;
-	}
-	
-//	public void loadAll() {
-//		InputStreamReader isr = new InputStreamReader( 
-//				folder , StandardCharsets.UTF_8 ) ;
-//		BufferedReader br = new BufferedReader( isr ) ;
-//		
-//		Entity entity = null ;
-//		String s = null ;
-//		try {
-//			while( ( s = br.readLine() ) != null ) {
-//				entity = load( s ) ;
-//				entities.put( entity.getType() , entity ) ;
-//			}
-//			br.close() ;
-//			isr.close() ;
-//			folder.close() ;
-//		}
-//		catch( Exception e ) {
-//			Debug.logErr( "EntityLoader : loadAll" , e ) ;
-//		}
-//		
-//		Debug.logDebug( 
-//				"EntityLoader : loaded " + entities.size() + " entities" ) ;
-//	}
-	
-	@Override
-	public Entity load( String name ) {
-		Entity entity = new Entity() ;
-		try {
-			InputStream is = getClass().getResourceAsStream( name ) ;
-			Debug.logDebug( "is:" + is.toString() ) ;
+			
+			InputStream is = getClass().getResourceAsStream( path ) ;
 			InputStreamReader isr = new InputStreamReader( is ) ;
 			BufferedReader br = new BufferedReader( isr ) ;
 			
@@ -176,10 +134,6 @@ public class EntityLoader extends AJSONLoader<Entity> {
 		catch( Exception e ) {
 			Debug.logErr( "EntityLoader : load" , e ) ;
 		}
-		
-		Debug.logDebug( "EntityLoader : loaded : " + entity + " \n"
-				+ "\t\t\t from : " + name ) ;
-		
 		return entity ;
 	}
 	

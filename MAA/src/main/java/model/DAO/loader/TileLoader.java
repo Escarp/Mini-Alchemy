@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -17,39 +16,33 @@ import view.Debug;
 
 public class TileLoader extends AJSONLoader<Tile> {
 	public static final String FOLDER = "tiles" ;
-	private HashMap<String , Tile> tiles ;
 	
-	//Getters
-	public HashMap<String , Tile> getTiles() {
-		return tiles;
-	}
-
-	//Setters
-	public void setTiles( HashMap<String , Tile> tiles ) {
-		this.tiles = tiles;
-	}
-
 	//Constructors
 	public TileLoader() {
-		tiles = new HashMap<>() ;
-		
-		final File jarFile = new File( 
-				getClass()
-				.getProtectionDomain()
-				.getCodeSource()
-				.getLocation()
-				.getPath() ) ;
-		
+	}
+	
+	//Methods
+	@Override
+	public Tile load( String name ) {
+		Tile tile = null ;
+		String path = "" ;
 		try {
+			final File jarFile = new File( 
+					getClass()
+					.getProtectionDomain()
+					.getCodeSource()
+					.getLocation()
+					.getPath() ) ;
+			
 			if( jarFile.isFile() ) {
 				final JarFile jar = new JarFile( jarFile ) ;
 				final Enumeration<JarEntry> entries = jar.entries() ;
 				while( entries.hasMoreElements() ) {
-					final String name = entries.nextElement().getName() ;
-					if(		name.startsWith( FOLDER + "/" ) && 
-							name.endsWith( ".json" ) ) {
-						Tile tile = load( "/" + name ) ;
-						tiles.put( tile.getType() , tile ) ;
+					path = entries.nextElement().getName() ;
+					if(	path.equals( FOLDER + "/" + name + ".json" ) ) {
+						//Load
+						path = "/" + path ;
+						break ;
 					}
 				}
 				jar.close() ;
@@ -59,25 +52,15 @@ public class TileLoader extends AJSONLoader<Tile> {
 				if( url != null ) {
 					final File files = new File( url.toURI() ) ;
 					for( File f : files.listFiles() ) {
-						Tile tile = load( "/" + FOLDER + "/" + f.getName() ) ;
-						tiles.put( tile.getType() , tile ) ;
+						//Load
+						if( f.getName().equals( name + ".json" ) ) {
+							path = "/" + FOLDER + "/" + f.getName() ;
+							break ;
+						}
 					}
 				}
 			}
-		}
-		catch( Exception e ) {
-			Debug.logErr( "EntityLoader : constructor" , e );
-		}
-			
-		//loadAll() ;
-	}
-	
-	//Methods
-	@Override
-	public Tile load( String name ) {
-		Tile tile = null ;
-		try {
-			InputStream is = getClass().getResourceAsStream( name ) ;
+			InputStream is = getClass().getResourceAsStream( path ) ;
 			InputStreamReader isr = new InputStreamReader( is ) ;
 			BufferedReader br = new BufferedReader( isr ) ;
 			
@@ -96,29 +79,6 @@ public class TileLoader extends AJSONLoader<Tile> {
 		catch( Exception e ) {
 			Debug.logErr( "TileLoader : load" , e ) ;
 		}
-		
-		Debug.logDebug( "TileLoader : loaded : " + tile + "\n"
-				+ "\t\t\t from : " + name ) ;
-		
 		return tile ;
 	}
-	
-//	public void loadAll() {
-//		InputStreamReader isr = new InputStreamReader( 
-//				folder , StandardCharsets.UTF_8 ) ;
-//		BufferedReader br = new BufferedReader( isr ) ;
-//		
-//		br.lines().forEach( l -> tiles.put( l , load( l ) ) ) ;
-//		
-//		try {
-//			br.close() ;
-//			isr.close() ;
-//			folder.close() ;
-//		}
-//		catch( Exception e ) {
-//			Debug.logErr( "TileLoader : loadAll" , e ) ;
-//		}
-//		
-//		Debug.logDebug( "TileLoader : loaded " + tiles.size() + " tiles" ) ;
-//	}
 }

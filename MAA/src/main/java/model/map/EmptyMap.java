@@ -27,10 +27,10 @@ public class EmptyMap extends AMap {
 			map.add( new ArrayList<>() ) ;
 			for( int x = 0 ; x < width ; x++ ){
 				if( y == 0 || x == 0 || x == width - 1 || y == height - 1 ) {
-					map.get( y ).add( loader.getTiles().get( "wall.json" ) ) ;
+					map.get( y ).add( loader.load( "wall.json" ) ) ;
 				}
 				else{
-					map.get( y ).add( loader.getTiles().get( "floor.json" ) ) ;
+					map.get( y ).add( loader.load( "floor.json" ) ) ;
 				}
 			}
 		}

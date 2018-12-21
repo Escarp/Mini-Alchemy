@@ -11,6 +11,7 @@ import model.entity.Entity;
 import model.map.tile.Tile;
 import util.ComponentUtils.ComponentType;
 import util.EntityUtils.EntityType;
+import view.Debug;
 
 public class DrunkMap extends AMap {
 	
@@ -19,7 +20,8 @@ public class DrunkMap extends AMap {
 		EntityLoader el = new EntityLoader() ;
 		
 		entities = new HashMap<EntityType , Entity>() ;
-		entities.putAll( el.getEntities() ) ;
+		entities.put( EntityType.PLAYER , el.load( 
+				EntityType.PLAYER.toString() ) ) ;
 	}
 		
 	
@@ -73,6 +75,23 @@ public class DrunkMap extends AMap {
 		}
 		
 		while( steps > 0 ) {
+			
+			if( steps == 1000 ) {
+				Debug.logDebug( "Generating map : 0%" );
+			}
+			else if( steps == 750 ) {
+				Debug.logDebug( "Generating map : 25%" );
+			}
+			else if( steps == 500 ) {
+				Debug.logDebug( "Generating map : 50%" );
+			}
+			else if( steps == 250 ) {
+				Debug.logDebug( "Generating map : 75%" );
+			}
+			else if( steps == 1 ) {
+				Debug.logDebug( "Generating map : 100%" );
+			}
+			
 			steps-- ;
 			
 			if( curX >= width ) {
@@ -90,7 +109,7 @@ public class DrunkMap extends AMap {
 			}
 			
 			map.get( curY ).set( 
-					curX , loader.getTiles().get( "floor" ) ) ;
+					curX , loader.load( "floor" ) ) ;
 			
 			if( rand.nextBoolean() ) {
 				curDirX = 0 ;
@@ -118,44 +137,46 @@ public class DrunkMap extends AMap {
 			curY += curDirY ;
 		}
 		
+		Debug.logDebug( "Generating walls..." ) ;
+		
 		for( int y = 1 ; y < height - 1 ; y++ ) {
 			for( int x = 1 ; x < width - 1 ; x++ ) {
 				if( map.get( y ).get( x ).getType().equals( "floor" ) ) {
 					if( map.get( y + 1 ).get( x + 1 ).getType().equals( 
 							"VOID" ) ) {
 						map.get( y + 1 ).set( 
-								x + 1 , loader.getTiles().get( "wall" ) ) ;
+								x + 1 , loader.load( "wall" ) ) ;
 					}
 					if( map.get( y + 1 ).get( x - 1 ).getType().equals( 
 							"VOID" ) ) {
 						map.get( y + 1 ).set( 
-								x - 1 , loader.getTiles().get( "wall" ) ) ;					
+								x - 1 , loader.load( "wall" ) ) ;					
 					}
 					if( map.get( y - 1 ).get( x + 1 ).getType().equals( 
 							"VOID" ) ) {
 						map.get( y - 1 ).set( 
-								x + 1 , loader.getTiles().get( "wall" ) ) ;
+								x + 1 , loader.load( "wall" ) ) ;
 					}
 					if( map.get( y - 1 ).get( x - 1 ).getType().equals( 
 							"VOID" ) ) {
 						map.get( y - 1 ).set(
-								x - 1 , loader.getTiles().get( "wall" ) ) ;
+								x - 1 , loader.load( "wall" ) ) ;
 					}
 					if( map.get( y ).get( x + 1 ).getType().equals( "VOID" ) ) {
 						map.get( y ).set( 
-								x + 1 , loader.getTiles().get( "wall" ) ) ;
+								x + 1 , loader.load( "wall" ) ) ;
 					}
 					if( map.get( y ).get( x - 1 ).getType().equals( "VOID" ) ) {
 						map.get( y ).set( 
-								x - 1 , loader.getTiles().get( "wall" ) ) ;
+								x - 1 , loader.load( "wall" ) ) ;
 					}
 					if( map.get( y - 1 ).get( x ).getType().equals( "VOID" ) ) {
 						map.get( y - 1 ).set( 
-								x , loader.getTiles().get( "wall" ) ) ;
+								x , loader.load( "wall" ) ) ;
 					}
 					if( map.get( y + 1 ).get( x ).getType().equals( "VOID" ) ) {
 						map.get( y + 1 ).set( 
-								x , loader.getTiles().get( "wall" ) ) ;
+								x , loader.load( "wall" ) ) ;
 					}
 				}
 			}
