@@ -76,18 +76,18 @@ public class DrunkMap extends AMap {
 		while( steps > 0 ) {
 			steps-- ;
 			
-			if( curX >= width ) {
-				curX = width - 1 ;
+			if( curX >= width - 2 ) {
+				curX = width - 2 ;
 			}
-			else if( curX <= 0 ) {
-				curX = 1 ;
+			else if( curX <= 2 ) {
+				curX = 2 ;
 			}
 			
-			if( curY >= height ) {
-				curY = height - 1 ;
+			if( curY >= height - 2 ) {
+				curY = height - 2 ;
 			}
-			else if( curY <= 0 ) {
-				curY = 1 ;
+			else if( curY <= 2 ) {
+				curY = 2 ;
 			}
 			
 			map.get( curY ).set( 
@@ -118,8 +118,8 @@ public class DrunkMap extends AMap {
 			curX += curDirX ;
 			curY += curDirY ;
 		}
-		for( int y = 1 ; y < height ; y++ ) {
-			for( int x = 1 ; x < width ; x++ ) {
+		for( int y = 1 ; y < height - 1 ; y++ ) {
+			for( int x = 1 ; x < width - 1 ; x++ ) {
 				if( map.get( y ).get( x ).getType().equals( "floor" ) ) {
 					if( map.get( y + 1 ).get( x + 1 ).getType().equals( 
 							"VOID" ) ) {
